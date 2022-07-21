@@ -123,6 +123,7 @@ When importing a flow, it is important to check if the flow is using the right a
     - The date must be specified in ISO 8601 format.
     - e.g., `2022-06-26T23:09:30-07:00` where `-07:00` represents timezone offset of UTC-07:00 hours
 
+![Set variable configuration](https://media.github.ibm.com/user/375131/files/06799700-0932-11ed-90c4-5842714c7033)
 
 #### Always-On Flow
 - This flow is to keep syncing the data after the initial sync
@@ -133,6 +134,9 @@ When importing a flow, it is important to check if the flow is using the right a
 #### Configuring the Flow Parameters
 
 - Click on the "Set variable" node
+
+![Set variable configuration](https://media.github.ibm.com/user/375131/files/06799700-0932-11ed-90c4-5842714c7033)
+
 - In Variable > config > customer, enter the value provided by Envizi
 - In Variable > config > triURL, enter URL for the Tririga instance
     - e.g., https://example.com:9080
