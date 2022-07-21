@@ -42,12 +42,12 @@ Note: The names in the screenshots are generic, the elements in this integration
 
 ### Adding Accounts
 
-Before importing the flow to AppConnect, add Accounts for SFTP and HTTP connectors. While adding account for HTTP connector, add credentials the Tririga user which can consume the OSLC API.
+Before importing the flow to AppConnect, add Accounts for SFTP and HTTP connectors. While adding the HTTP connector account, include credentials for the Tririga user which can consume the OSLC API.
 
 - Navigate to Catalog section of the AppConnect instance
 <img width="960" alt="Create Account 1" src="https://media.github.ibm.com/user/375131/files/eb8b5a00-eb1d-11ec-8401-35b47d561ce4">
 
-- In the "Search application", type name of the connector to add the account for
+- In the "Search application" field, type name of the connector.
 
 - If the AppConnect instance does not have an account for the connector, click on "Connect" to create a new account
 <img width="960" alt="Create Account 2a" src="https://media.github.ibm.com/user/375131/files/ec23f080-eb1d-11ec-9f62-af1addec3fd3">
@@ -99,15 +99,17 @@ When importing a flow, it is important to check if the flow is using the right a
 ### Configuring the Scheduler
 
 - Click on the "Scheduler" node
-    ![Scheduler node](https://media.github.ibm.com/user/375131/files/ea694d80-01ed-11ed-8852-16b625339675)
+
+<img width="659" alt="Scheduler node" src="https://media.github.ibm.com/user/375131/files/ea694d80-01ed-11ed-8852-16b625339675">
 
 - Configure the schedule as needed
-    ![Scheduler configuration 1](https://media.github.ibm.com/user/375131/files/d70ab200-01ee-11ed-9af7-4f66738aea7c)
-    ![Scheduler configuration 2](https://media.github.ibm.com/user/375131/files/00c3d900-01ef-11ed-86aa-29008ff86450)
+
+<img width="659" alt="Scheduler configuration 1" src="https://media.github.ibm.com/user/375131/files/d70ab200-01ee-11ed-9af7-4f66738aea7c">
+<img width="659" alt="Scheduler configuration 2" src="https://media.github.ibm.com/user/375131/files/00c3d900-01ef-11ed-86aa-29008ff86450">
 
 ### Using the flows
 
-- This integration comes with two types of flows
+This integration comes with two types of flows:
 
 #### On-demand Flow
 
