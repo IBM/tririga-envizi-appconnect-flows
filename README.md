@@ -128,7 +128,7 @@ When importing a flow, it is important to check if the flow is using the right a
 - This flow is to keep syncing the data after the initial sync
 - This flow is meant to be kept running
 - This flow will only sync the data that has been added or updated after its previous execution event.
-  - e.g., If the flow executes at 2 pm and 
+  - e.g., If the flow executes at 2 PM and it's previous execution was at 1 PM, the flow will pull data that has been added or updated after 1 PM.
 
 #### Configuring the Flow Parameters
 
