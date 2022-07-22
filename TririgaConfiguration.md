@@ -12,8 +12,7 @@ On data modeler, open BO Location-\>triBuilding. Revise the BO and add
 four fields: cstEnviziParentOneTX, cstEnviziParentTwoTX,
 cstEnviziParentThreeTX and cstEnviziGroupNamePathTX
 
-![Table Description automatically
-generated](./media/image1.png){width="6.5in" height="4.075in"}
+<img width="512" alt="Data Modeler Fields" src="https://media.github.ibm.com/user/348712/files/3ddd5780-09b5-11ed-9014-fbd85b21e6eb">
 
 Name and Label should be the following:
 
@@ -62,16 +61,12 @@ Select the section again, Click on Add Field and select fieldname
 Select EnviziPathTX and modify Start Row to 3 and Col Span to 2 on the
 properties window. Also mark this field as ReadOnly. Click Apply
 
-![Table Description automatically
-generated](./media/image2.png){width="6.5in"
-height="0.8104166666666667in"}
+<img width="256" alt="Form Builder" src="https://media.github.ibm.com/user/348712/files/4f266400-09b5-11ed-9ca4-4253b2fa9baa">
 
 Click on triBuilding on the left panel and then click on Sort Tab. Move
 this new tab to the second position and click Apply
 
-![Table Description automatically
-generated](./media/image3.png){width="3.4444444444444446in"
-height="4.534288057742782in"}
+<img width="256" alt="Form Builder Properties" src="https://media.github.ibm.com/user/348712/files/4f266400-09b5-11ed-8a73-f526a24a86db">
 
 Publish the form
 
@@ -90,9 +85,7 @@ On this tab select Location -\> triBuilding -\> cstEnvizi
 Select No access for groups that should not have access to this tab and
 Save
 
-![Table Description automatically
-generated](./media/image4.png){width="5.194444444444445in"
-height="2.726162510936133in"}
+<img width="423" alt="Security Manager Access" src="https://media.github.ibm.com/user/348712/files/4fbefa80-09b5-11ed-99e5-b92fca943ddf">
 
 **Workflow Builder**
 
@@ -102,45 +95,39 @@ Create a new Workflow name cst - triBuilding - Update Envizi path 
 
 This Worklow will look like that:
 
-![Diagram Description automatically
-generated](./media/image5.png){width="6.5in"
-height="6.9840277777777775in"}
+<img width="564" alt="Workflow" src="https://media.github.ibm.com/user/348712/files/4f266400-09b5-11ed-9919-1f2fb10fd860">
 
 The first switch should have the following condition:
 
-![](./media/image6.png){width="6.5in" height="0.725in"}
+<img width="484" alt="1st Switch Expression" src="https://media.github.ibm.com/user/348712/files/4fbefa80-09b5-11ed-8738-62e0ccb761f9">
 
 Modify Parent One Modify task should have this mapping:
 
-![](./media/image7.png){width="6.5in" height="0.5138888888888888in"}
+<img width="569" alt="Modify Parent One Mapping" src="https://media.github.ibm.com/user/348712/files/4fbefa80-09b5-11ed-9306-f120dffa38e8">
 
 Set Blank Modify Task should have this mapping:
 
-![](./media/image8.png){width="6.5in" height="0.3347222222222222in"}
+<img width="680" alt="Set Blank Task" src="https://media.github.ibm.com/user/348712/files/50579100-09b5-11ed-80b3-0bc45efda653">
 
 The second switch should have the following condition:
 
-![](./media/image9.png){width="6.5in" height="0.4673611111111111in"}
+<img width="473" alt="2nd Switch Expression" src="https://media.github.ibm.com/user/348712/files/4fbefa80-09b5-11ed-8db9-31cb358f4b60">
 
 Modify Parent Two Modify Task should have this mapping:
 
-![](./media/image10.png){width="6.5in" height="0.4236111111111111in"}
+<img width="629" alt="Modify Parent Two Mapping" src="https://media.github.ibm.com/user/348712/files/361eb280-09b7-11ed-9e3f-00b94068ebd6">
 
-![Graphical user interface Description automatically
-generated](./media/image11.png){width="6.5in"
-height="1.8381944444444445in"}
+<img width="587" alt="Parent Two Inputs and Formula" src="https://media.github.ibm.com/user/348712/files/36b74900-09b7-11ed-875c-e60f87afefcf">
 
 The third switch should have the following condition:
 
-![](./media/image12.png){width="6.5in" height="0.4798611111111111in"}
+<img width="474" alt="3rd Switch Expression" src="https://media.github.ibm.com/user/348712/files/36b74900-09b7-11ed-89c5-71da43fe6e50">
 
 Modify Parent Three Modify Task should have this mapping:
 
-![](./media/image13.png){width="6.5in" height="0.48055555555555557in"}
+<img width="487" alt="Modify Parent Three Mapping" src="https://media.github.ibm.com/user/348712/files/36b74900-09b7-11ed-8058-03b7ed9d8bc6">
 
-![Graphical user interface Description automatically
-generated](./media/image14.png){width="6.5in"
-height="2.2180555555555554in"}
+<img width="589" alt="Modify Parent Three Mapping-2" src="https://media.github.ibm.com/user/348712/files/374fdf80-09b7-11ed-80d9-3911aa5f031e">
 
 Publish cst - triBuilding - Update Envizi path workflow
 
@@ -152,9 +139,7 @@ call to
 
 "cst - triBuilding - Update Envizi path" like displayed below:
 
-![Diagram Description automatically
-generated](./media/image15.png){width="6.5in"
-height="6.146527777777778in"}
+<img width="736" alt="WF call in Update Envizi Path" src="https://media.github.ibm.com/user/348712/files/374fdf80-09b7-11ed-8f47-3c588b667a58">
 
 Publish the workflow
 
@@ -167,28 +152,19 @@ Task
 
 Open Modify Group Name1 modify task and enter the following
 
-![Graphical user interface, text, application Description automatically
-generated](./media/image16.png){width="6.5in"
-height="1.0451388888888888in"}
+<img width="759" alt="Group Name1 Modify Task" src="https://media.github.ibm.com/user/348712/files/36b74900-09b7-11ed-8722-b1dbeba27e23">
 
 Open Modify Group Name2 modify task and enter the following
 
-![Graphical user interface, application Description automatically
-generated](./media/image17.png){width="6.5in"
-height="1.1090277777777777in"}
+<img width="768" alt="Group Name2 Modify Task" src="https://media.github.ibm.com/user/348712/files/374fdf80-09b7-11ed-96b8-9634174db7a1">
 
-![Graphical user interface Description automatically
-generated](./media/image18.png){width="6.5in"
-height="1.8069444444444445in"}
+<img width="608" alt="Group Name2 Modify Task-2" src="https://media.github.ibm.com/user/348712/files/361eb280-09b7-11ed-8044-c0861e85aa4d">
 
 Open Modify Group Name3 modify task and enter the following
 
-![A picture containing table Description automatically
-generated](./media/image19.png){width="6.5in" height="1.01875in"}
+<img width="638" alt="Group Name3 Modify Task" src="https://media.github.ibm.com/user/348712/files/35861c00-09b7-11ed-8a4b-8f4ed004675e">
 
-![Graphical user interface Description automatically
-generated](./media/image20.png){width="6.5in"
-height="2.1777777777777776in"}
+<img width="600" alt="Group Name3 Modify Task-2" src="https://media.github.ibm.com/user/348712/files/361eb280-09b7-11ed-84be-438ae45f0d7f">
 
 Publish this workflow
 
@@ -204,47 +180,41 @@ Revise the Workflow and modify the following modifyTask:
 Modify Parent One task(if you want to use a custom value, set it on
 those mapping):
 
-![](./media/image21.png){width="6.5in" height="0.7986111111111112in"}
+<img width="529" alt="Patch Helper Parent One" src="https://media.github.ibm.com/user/348712/files/73d10a80-09ba-11ed-958f-6c3df5f47ad3">
 
 Modify Parent Two task(if you want to use a custom value, set it on
 those mapping)::
 
-![](./media/image22.png){width="6.5in" height="0.4201388888888889in"}
+<img width="619" alt="Patch Helper Parent Two" src="https://media.github.ibm.com/user/348712/files/73d10a80-09ba-11ed-9bca-cdf074e7cf37">
 
 Modify Parent TwoPath task:
 
-![](./media/image10.png){width="6.5in" height="0.4236111111111111in"}
+<img width="629" alt="Modify Parent Two Mapping" src="https://media.github.ibm.com/user/348712/files/361eb280-09b7-11ed-9e3f-00b94068ebd6">
 
-![Graphical user interface Description automatically
-generated](./media/image11.png){width="6.5in"
-height="1.8381944444444445in"}
+<img width="587" alt="Parent Two Inputs and Formula" src="https://media.github.ibm.com/user/348712/files/36b74900-09b7-11ed-875c-e60f87afefcf">
 
 Modify Parent Three task(if you want to use a custom value, set it on
 those mapping)::
 
-![](./media/image23.png){width="6.5in" height="0.4722222222222222in"}
+<img width="592" alt="Patch Helper Parent Three" src="https://media.github.ibm.com/user/348712/files/73387400-09ba-11ed-8a8a-9f412982a9ce">
 
 Modify Parent ThreePath task:
 
-![](./media/image13.png){width="6.5in" height="0.48055555555555557in"}
+<img width="487" alt="Modify Parent Three Mapping" src="https://media.github.ibm.com/user/348712/files/36b74900-09b7-11ed-8058-03b7ed9d8bc6">
 
-![Graphical user interface Description automatically
-generated](./media/image14.png){width="6.5in"
-height="2.2180555555555554in"}
+<img width="589" alt="Modify Parent Three Mapping-2" src="https://media.github.ibm.com/user/348712/files/374fdf80-09b7-11ed-80d9-3911aa5f031e">
 
 SetBlank:
 
-![Graphical user interface, application Description automatically
-generated](./media/image24.png){width="6.5in"
-height="1.2277777777777779in"}
+<img width="683" alt="Patch Helper Set Blank 1" src="https://media.github.ibm.com/user/348712/files/73387400-09ba-11ed-81fa-ab59763a2de0">
 
 Set Parent Two and Three Blank:
 
-![](./media/image25.png){width="6.5in" height="0.6604166666666667in"}
+<img width="679" alt="Patch Helper Set Blank 2" src="https://media.github.ibm.com/user/348712/files/729fdd80-09ba-11ed-95df-381836697eed">
 
 Set Parent Three Blank:
 
-![](./media/image26.png){width="6.5in" height="0.35694444444444445in"}
+<img width="674" alt="Patch Helper Set Blank 3" src="https://media.github.ibm.com/user/348712/files/73387400-09ba-11ed-9aea-16908b7c9861">
 
 **My Reports/OSLC**
 
@@ -255,9 +225,7 @@ Open Tools -\> System Setup -\> Integration -\> OSLC Resource manager
 and search for triAPICOutboundBuildingRS. On this resource, add the four
 new fields(you can use Import all Fields)
 
-![Graphical user interface, application Description automatically
-generated](./media/image27.png){width="6.5in"
-height="1.8576388888888888in"}
+<img width="683" alt="OSLC Manager" src="https://media.github.ibm.com/user/348712/files/73387400-09ba-11ed-912f-569fce1dc420">
 
 **How to use**
 
@@ -290,15 +258,11 @@ that the patch helper will modify
 If you want to run this patch helper, go To Administration -\> Data
 Integration to run patch helper. Upload a file using triNameTx = Envizi
 
-![Graphical user interface, text, application Description automatically
-generated](./media/image28.png){width="6.5in"
-height="3.5743055555555556in"}
+<img width="682" alt="Data Integrator" src="https://media.github.ibm.com/user/348712/files/7469a100-09ba-11ed-9111-c30331bb797b">
 
 TXT file should have this content
 
-![Text Description automatically generated with medium
-confidence](./media/image29.png){width="1.1388888888888888in"
-height="0.5416666666666666in"}
+<img width="82" alt="TXT file" src="https://media.github.ibm.com/user/348712/files/73d10a80-09ba-11ed-97e9-d1655dfec1f8">
 
 After that the records will be populated with the initial values
 defined. Please note that Patch helpers can be executed only once. So,
