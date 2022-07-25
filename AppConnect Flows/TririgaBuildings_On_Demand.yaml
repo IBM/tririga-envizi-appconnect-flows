@@ -881,7 +881,7 @@ integration:
                       template: GET
                   - url:
                       template: >-
-                        http://9.30.43.110:8001/oslc/spq/{{$Setvariable.variable.query.from}}?{{$Setvariable4.variable.query}}&oslc.pageSize={{$Setvariable2.variable.pageSize}}&pageno={{$Foreachitem}}
+                        {{$Setvariable.variable.config.triURL}}/oslc/spq/{{$Setvariable.variable.query.from}}?{{$Setvariable4.variable.query}}&oslc.pageSize={{$Setvariable2.variable.pageSize}}&pageno={{$Foreachitem}}
                 $map: http://ibm.com/appconnect/map/v1
                 input:
                   - variable: Foreachitem
