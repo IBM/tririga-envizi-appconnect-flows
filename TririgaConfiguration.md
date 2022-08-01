@@ -17,7 +17,7 @@ This solution adds four fields that hold the group name values and the path for 
 
 ### Import OM Package
 
-Import the most recent [OM Package](OM%20Package/Envizi_GroupNameChanges.zip) into the Tririga instance. Go to Tools -> Administration -> Object Migration and select 'New Import Package' to begin the import process.
+Import the most recent [OM Package](https://github.com/IBM/tririga-api/tree/main/docs/ompackages) into the Tririga instance. Go to Tools -> Administration -> Object Migration and select 'New Import Package' to begin the import process.
 
 Here are the manual changes that need to be done:
 
