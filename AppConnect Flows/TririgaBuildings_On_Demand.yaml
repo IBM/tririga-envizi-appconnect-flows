@@ -127,7 +127,7 @@ integration:
                                   template: >-
                                     *,spi:triAPICBuildingParent3LR{spi:triNameTX,spi:triAPICBuildingParent2LR{spi:triNameTX,spi:triAPICBuildingParent1LR{spi:triNameTX}}}
                               - where:
-                                  template: spi:triActiveEndDA="null"
+                                  template: spi:triStatusCL in ["Active","Retired"]
           - if:
               name: If
               input:
@@ -450,12 +450,8 @@ integration:
                     $ref: '#/trigger/payload'
                   - variable: Setvariable
                     $ref: '#/node-output/Set variable/response/payload'
-                  - variable: HTTPInvokemethod3
-                    $ref: '#/node-output/HTTP Invoke method 3/response/payload'
-                  - variable: HTTPInvokemethod3Metadata
-                    $ref: '#/node-output/HTTP Invoke method 3/response'
-                  - variable: JSONParserParse3
-                    $ref: '#/node-output/JSON Parser Parse 3/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
                   - variable: Setvariable2
                     $ref: '#/node-output/Set variable 2/response/payload'
                   - variable: Setvariable3
@@ -890,12 +886,8 @@ integration:
                     $ref: '#/trigger/payload'
                   - variable: Setvariable
                     $ref: '#/node-output/Set variable/response/payload'
-                  - variable: HTTPInvokemethod3
-                    $ref: '#/node-output/HTTP Invoke method 3/response/payload'
-                  - variable: HTTPInvokemethod3Metadata
-                    $ref: '#/node-output/HTTP Invoke method 3/response'
-                  - variable: JSONParserParse3
-                    $ref: '#/node-output/JSON Parser Parse 3/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
                   - variable: Setvariable2
                     $ref: '#/node-output/Set variable 2/response/payload'
                   - variable: Setvariable3
@@ -1314,6 +1306,8 @@ integration:
                                 - LONGITUDEX:
                                     template: >-
                                       {{$buildingsCSVItem."spi:triGisLongitudeNU"}}
+                                - LOCATIONCLOSEDATE:
+                                    template: '{{$buildingsCSVItem."spi:triActiveEndDA"}}'
                                 - POSTALCODE:
                                     template: '{{$buildingsCSVItem."spi:triZipPostalTX"}}'
                                 - STATEPROVINCE:
@@ -1363,7 +1357,9 @@ integration:
               assembly:
                 $ref: '#/integration/assemblies/assembly-3'
               source:
-                expression: '$JSONParserParse."rdfs:member" '
+                expression: >-
+                  $If.isOnDemand ? $JSONParserParse."rdfs:member" :
+                  $JSONParserParse."rdfs:member"[$."spi:triStatusCL"="Active"]
                 input:
                   - variable: Foreachitem
                     $ref: '#/block/For each/current-item'
@@ -1385,12 +1381,8 @@ integration:
                       6/response/payload
                   - variable: Setvariable
                     $ref: '#/node-output/Set variable/response/payload'
-                  - variable: HTTPInvokemethod3
-                    $ref: '#/node-output/HTTP Invoke method 3/response/payload'
-                  - variable: HTTPInvokemethod3Metadata
-                    $ref: '#/node-output/HTTP Invoke method 3/response'
-                  - variable: JSONParserParse3
-                    $ref: '#/node-output/JSON Parser Parse 3/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
                   - variable: Setvariable2
                     $ref: '#/node-output/Set variable 2/response/payload'
                   - variable: Setvariable3
