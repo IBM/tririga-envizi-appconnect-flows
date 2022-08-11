@@ -1314,6 +1314,9 @@ integration:
                                 - LONGITUDEX:
                                     template: >-
                                       {{$buildingsCSVItem."spi:triGisLongitudeNU"}}
+                                - LOCATIONCLOSEDATE:
+                                    template: >-
+                                      {{$buildingsCSVItem."spi:triActiveEndDA"}}
                                 - POSTALCODE:
                                     template: '{{$buildingsCSVItem."spi:triZipPostalTX"}}'
                                 - STATEPROVINCE:
