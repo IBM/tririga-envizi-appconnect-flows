@@ -3,7 +3,12 @@
 ## Table of Contents
 
 <!--ts-->
+  * [Security Role Configuration](#security-role-configuration)
+    * [Object Migration Access](#object-migration-access)
   * [Import OM Package](#import-om-package)
+  * [Tririga API User Access](#tririga-api-user-access)
+    * [Outbound Traffic](#outbound-traffic-from-tririga)
+    * [Inbound Traffic](#inbound-traffic-to-tririga)
   * [Data Modeler](#data-modeler)
   * [Form Builder](#form-builder)
   * [Security Manager](#security-manager)
@@ -15,11 +20,79 @@
 
 This solution adds four fields that hold the group name values and the path for the integration. It also makes sure that the payload is sent when there is an update.
 
+### Security Role Configuration
+In order to properly configure Tririga, a user needs to be configured with the proper security access for Object Migration and Tririga APIs
+
+#### Object Migration Access
+
+Begin by creating a Security Group with the proper application access. Go to Tools -> Administration -> Security Manager
+
+<img width="1076" alt="Security Manager" src="https://media.github.ibm.com/user/348712/files/ba5bd700-1a45-11ed-8b1a-3cf09869b74b">
+
+Click 'Add' to create a new security group or modify an existing group by clicking on the desired group. Fill in the information on the 'General' tab in the pop-up that opens.
+
+<img width="999" alt="Admin Group General Info" src="https://media.github.ibm.com/user/348712/files/ba5bd700-1a45-11ed-8b04-38ab22d7568b">
+
+Switch to the 'Access' tab and add the appropriate access to allow for importation of Object Migration Packages. There are 2 panes in 'Access': Object and Permissions. Scroll and find the Object Migration Object on the left pane and click 'Full Access' on the right pane.
+
+<img width="1002" alt="Access Permissions" src="https://media.github.ibm.com/user/348712/files/baf46d80-1a45-11ed-924e-acda1e9bfe24">
+
+The users in this group, granted through the Members tab, will be able to import the Tririga API Object Migration package. 
+
+Please refer to official IBM® Tririga documentation for more information on Object Migration: 
+
+https://www.ibm.com/docs/en/tap/3.6.1?topic=objects-object-migration-overview  
+
 ### Import OM Package
 
 Import the most recent [OM Package](https://github.com/IBM/tririga-api/tree/main/docs/ompackages) into the Tririga instance. Go to Tools -> Administration -> Object Migration and select 'New Import Package' to begin the import process.
 
-Here are the manual changes that need to be done:
+### Tririga API User Access
+
+Once the OM Package is imported into the environment, a Tririga user is needed to make the API calls. The user will need certain user permissions based on which Tririga Modules they need to interact with. The Tririga API allows for both Inbound and Outbound traffic.
+
+#### Outbound Traffic from Tririga
+
+For outbound traffic from Tririga, grant at least READ access on the Business Objects that will be used. The table below shows the various supported business Objects the API can pull from: 
+
+Module | Business Object Label
+--|--
+Asset | [Building Equipment](https://github.com/IBM/tririga-api/blob/main/markdowns/Asset.md)
+Classification | [Request Class](https://github.com/IBM/tririga-api/blob/main/markdowns/RequestClass.md)
+Classification | [Space Class Current](https://github.com/IBM/tririga-api/blob/main/markdowns/SpaceClass.md)
+Classification | [Asset Spec Class](https://github.com/IBM/tririga-api/blob/main/markdowns/AssetSpecClass.md)
+People | [People](https://github.com/IBM/tririga-api/blob/main/markdowns/People.md)
+Location |[Property](https://github.com/IBM/tririga-api/blob/main/markdowns/Property.md)
+Location |[Building](https://github.com/IBM/tririga-api/blob/main/markdowns/Building.md)
+Location |[Floor](https://github.com/IBM/tririga-api/blob/main/markdowns/Floor.md)
+Location |[Space](https://github.com/IBM/tririga-api/blob/main/markdowns/Space.md)
+Organization |[Organization](https://github.com/IBM/tririga-api/blob/main/markdowns/Organization.md)
+Request |[Service Request](https://github.com/IBM/tririga-api/blob/main/markdowns/ServiceRequest.md)
+Task |[Work Task](https://github.com/IBM/tririga-api/blob/main/markdowns/WorkTask.md)
+
+In the example below, the API user is able to pull data from the Property Business Object: 
+
+<img width="1097" alt="Outbound Business Object" src="https://media.github.ibm.com/user/348712/files/baf46d80-1a45-11ed-8a28-9250be0c8e21">
+
+#### Inbound traffic to Tririga
+
+For inbound traffic, Data Access needs to be enabled and Application Access permissions to the triAPIConnect Module or the individual Objects. To enable an API user to create an organization, grant access to the triAPICOrganization Business object as shown below: 
+
+<img width="1000" alt="Inbound Traffic Business Object" src="https://media.github.ibm.com/user/348712/files/bb8d0400-1a45-11ed-99b1-f598efa63db1">
+
+In addition to Data Access and Application access, the API user also needs to have appropriate license(s) to make these calls. Please refer to the Tririga Documentation on Security and Licenses by following this link: 
+
+https://www.ibm.com/docs/en/tap/3.6.1?topic=platform-license-files 
+
+
+Additional information on Tririga Security groups can be found here: 
+
+https://www.ibm.com/docs/en/tap/3.6.1?topic=security-groups 
+
+
+
+
+## Group Name Configuration
 
 ### Data Modeler
 
