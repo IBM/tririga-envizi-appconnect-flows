@@ -132,9 +132,7 @@ integration:
                               - pageSize:
                                   expression: "100"
                               - select:
-                                  template: "*,spi:triAPICBuildingParent3LR{spi:triNameTX,spi:triAPICBuildingPare\
-                                    nt2LR{spi:triNameTX,spi:triAPICBuildingPare\
-                                    nt1LR{spi:triNameTX}}}"
+                                  template: "*"
                               - where:
                                   template: spi:triStatusCL in ["Active","Retired"]
           - if:
@@ -462,6 +460,8 @@ integration:
                     $ref: "#/trigger/payload"
                   - variable: Setvariable
                     $ref: "#/node-output/Set variable/response/payload"
+                  - variable: If
+                    $ref: "#/node-output/If/response/payload"
                   - variable: Setvariable2
                     $ref: "#/node-output/Set variable 2/response/payload"
                   - variable: Setvariable3
@@ -472,6 +472,8 @@ integration:
                     $ref: "#/node-output/HTTP Invoke method/response/payload"
                   - variable: HTTPInvokemethodMetadata
                     $ref: "#/node-output/HTTP Invoke method/response"
+                  - variable: flowDetails
+                    $ref: "#/flowDetails"
               sample-data: >-
                 {
                     "prefixes": {
@@ -485,49 +487,50 @@ integration:
                         "oslc:nextPage": {
                             "rdf:resource": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?oslc.select=*&oslc.pageSize=1&pageno=3"
                         },
-                        "oslc:totalCount": 9,
-                        "rdf:about": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?oslc.select=*&pageno=1&oslc.pageSize=1"
+                        "oslc:totalCount": 194,
+                        "rdf:about": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?pageno=1&oslc.select=*&oslc.pageSize=1"
                     },
                     "rdfs:member": [
                         {
-                            "spi:triTotalAreaOccupiedCalcNU": 0,
-                            "spi:triTenureCL": null,
+                            "spi:triTotalAreaOccupiedCalcNU": 162.580319950303,
+                            "spi:groupName": "Latin America",
+                            "spi:triTenureCL": "Leased",
                             "spi:triHeadcountNU": 0,
-                            "spi:triCountryTX": null,
-                            "spi:triGisLongitudeNU": 0,
-                            "spi:triBuildingClassCL": null,
+                            "spi:triCountryTX": "Brazil",
+                            "spi:triGisLongitudeNU": -43.255234,
+                            "spi:triBuildingClassCL": "Office",
+                            "spi:cstEnviziGroupNamePathTX": "Latin America\\Brazil\\Rio de Janeiro",
                             "spi:triAPICBuildingParent3LR": {
-                                "rdf:resource": "http://localhost/oslc/so/triAPICBuildingParent3RS/135593190"
+                                "rdf:resource": "http://localhost/oslc/so/triAPICBuildingParent3RS/13038683"
                             },
-                            "spi:triGisLatitudeNU": 0,
-                            "spi:triActiveStartDA": "2022-06-20",
-                            "spi:triStateProvTX": null,
-                            "spi:triNameTX": "Asia Pacific2",
-                            "spi:triEmailTX": null,
-                            "spi:triPrimaryUseCL": null,
+                            "spi:triGisLatitudeNU": -22.8072,
+                            "spi:triActiveStartDA": "2010-11-12",
+                            "spi:triStateProvTX": "Rio de Janeir",
+                            "spi:cstEnviziParentThreeTX": "Rio de Janeiro",
+                            "spi:triNameTX": "Rio Complex",
+                            "spi:triLegalNameTX": "Rio Complex",
+                            "spi:triPrimaryUseCL": "Sales",
                             "spi:triProRateBalanceToLI": "Balance To Measured",
-                            "spi:triLegalNameTX": null,
-                            "spi:triCurrencyUO": "US Dollars",
-                            "spi:triCityTX": null,
-                            "spi:triIdTX": "1000009",
-                            "spi:triZoningCL": null,
-                            "spi:action": "http://localhost/oslc/system/action/triAPICOutboundBuildingRS/135593293",
-                            "spi:contactOrganization": null,
+                            "spi:triCurrencyUO": "Brazilian real",
+                            "spi:triCityTX": "Rio de Janeiro",
+                            "spi:triIdTX": "LA002",
+                            "spi:triZoningCL": "Commercial",
+                            "spi:action": "http://localhost/oslc/system/action/triAPICOutboundBuildingRS/13042950",
                             "spi:triStatusCL": "Active",
-                            "spi:triPathTX": "\\Locations\\A2-Offices2\\Asia Pacific2\\Envizi-B2",
+                            "spi:triPathTX": "\\Locations\\Offices\\Latin America\\Rio Complex",
                             "spi:triParentPropertyTX": null,
-                            "spi:contactRole": null,
-                            "rdf:about": "http://localhost/oslc/so/triAPICOutboundBuildingRS/135593293",
-                            "spi:triAddressTX": null,
-                            "dcterms:identifier": "135593293",
+                            "rdf:about": "http://localhost/oslc/so/triAPICOutboundBuildingRS/13042950",
+                            "spi:triAddressTX": "R. Theophilo Otoni, 52 - Centro",
+                            "dcterms:identifier": "13042950",
                             "spi:triActiveEndDA": null,
-                            "spi:triJurisdictionCL": null,
-                            "spi:triAreaUO": "square-feet",
-                            "spi:triDescriptionTX": null,
-                            "spi:triZipPostalTX": null,
-                            "spi:contactName": null,
-                            "spi:triLengthUO": "feet",
-                            "spi:triWorkPhoneTX": null
+                            "spi:triJurisdictionCL": "Local/Other",
+                            "spi:cstEnviziParentTwoTX": "Brazil",
+                            "spi:cstEnviziParentOneTX": "Latin America",
+                            "spi:triAreaUO": "square-meters",
+                            "spi:triDescriptionTX": "Rio Complex",
+                            "spi:triZipPostalTX": "20090-070",
+                            "spi:triModifiedSY": "2022-09-09T07:06:45.350+00:00",
+                            "spi:triLengthUO": "meters"
                         }
                     ],
                     "rdf:type": [
@@ -573,16 +576,20 @@ integration:
                       properties:
                         spi:triTotalAreaOccupiedCalcNU:
                           type: number
+                        spi:groupName:
+                          type: string
                         spi:triTenureCL:
-                          type: "null"
+                          type: string
                         spi:triHeadcountNU:
                           type: number
                         spi:triCountryTX:
-                          type: "null"
+                          type: string
                         spi:triGisLongitudeNU:
                           type: number
                         spi:triBuildingClassCL:
-                          type: "null"
+                          type: string
+                        spi:cstEnviziGroupNamePathTX:
+                          type: string
                         spi:triAPICBuildingParent3LR:
                           type: object
                           properties:
@@ -593,59 +600,57 @@ integration:
                         spi:triActiveStartDA:
                           type: string
                         spi:triStateProvTX:
-                          type: "null"
+                          type: string
+                        spi:cstEnviziParentThreeTX:
+                          type: string
                         spi:triNameTX:
                           type: string
-                        spi:triEmailTX:
-                          type: "null"
+                        spi:triLegalNameTX:
+                          type: string
                         spi:triPrimaryUseCL:
-                          type: "null"
+                          type: string
                         spi:triProRateBalanceToLI:
                           type: string
-                        spi:triLegalNameTX:
-                          type: "null"
                         spi:triCurrencyUO:
                           type: string
                         spi:triCityTX:
-                          type: "null"
+                          type: string
                         spi:triIdTX:
                           type: string
                         spi:triZoningCL:
-                          type: "null"
+                          type: string
                         spi:action:
                           type: string
-                        spi:contactOrganization:
-                          type: "null"
                         spi:triStatusCL:
                           type: string
                         spi:triPathTX:
                           type: string
                         spi:triParentPropertyTX:
                           type: "null"
-                        spi:contactRole:
-                          type: "null"
                         rdf:about:
                           type: string
                         spi:triAddressTX:
-                          type: "null"
+                          type: string
                         dcterms:identifier:
                           type: string
                         spi:triActiveEndDA:
                           type: "null"
                         spi:triJurisdictionCL:
-                          type: "null"
+                          type: string
+                        spi:cstEnviziParentTwoTX:
+                          type: string
+                        spi:cstEnviziParentOneTX:
+                          type: string
                         spi:triAreaUO:
                           type: string
                         spi:triDescriptionTX:
-                          type: "null"
+                          type: string
                         spi:triZipPostalTX:
-                          type: "null"
-                        spi:contactName:
-                          type: "null"
+                          type: string
+                        spi:triModifiedSY:
+                          type: string
                         spi:triLengthUO:
                           type: string
-                        spi:triWorkPhoneTX:
-                          type: "null"
                   rdf:type:
                     type: array
                     items:
@@ -701,12 +706,8 @@ integration:
                     $ref: "#/trigger/payload"
                   - variable: Setvariable
                     $ref: "#/node-output/Set variable/response/payload"
-                  - variable: HTTPInvokemethod3
-                    $ref: "#/node-output/HTTP Invoke method 3/response/payload"
-                  - variable: HTTPInvokemethod3Metadata
-                    $ref: "#/node-output/HTTP Invoke method 3/response"
-                  - variable: JSONParserParse3
-                    $ref: "#/node-output/JSON Parser Parse 3/response/payload"
+                  - variable: If
+                    $ref: "#/node-output/If/response/payload"
                   - variable: Setvariable2
                     $ref: "#/node-output/Set variable 2/response/payload"
                   - variable: Setvariable3
@@ -941,77 +942,52 @@ integration:
                   },
                   "oslc:responseInfo": {
                     "oslc:nextPage": {
-                      "rdf:resource": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?oslc.select=*,spi:triAPICBuildingParent3LR%7Bspi:triNameTX,spi:triAPICBuildingParent2LR%7Bspi:triNameTX,spi:triAPICBuildingParent1LR%7Bspi:triNameTX%7D%7D%7D&oslc.where=spi%3AtriModifiedSY%3E%3D%221985-04-12T23%3A20%3A50.520%2B00%3A00%22&oslc.pageSize=9&pageno=2"
+                            "rdf:resource": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?oslc.select=*&oslc.pageSize=1&pageno=3"
                     },
-                    "oslc:totalCount": 16,
-                    "rdf:about": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?oslc.select=*,spi:triAPICBuildingParent3LR%7Bspi:triNameTX,spi:triAPICBuildingParent2LR%7Bspi:triNameTX,spi:triAPICBuildingParent1LR%7Bspi:triNameTX%7D%7D%7D&oslc.where=spi%3AtriModifiedSY%3E%3D%221985-04-12T23%3A20%3A50.520%2B00%3A00%22&oslc.pageSize=9&pageno=1"
+                        "oslc:totalCount": 194,
+                        "rdf:about": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?pageno=1&oslc.select=*&oslc.pageSize=1"
                   },
                   "rdfs:member": [
                     {
-                      "spi:triTotalAreaOccupiedCalcNU": 0,
-                      "spi:triTenureCL": null,
+                            "spi:triTotalAreaOccupiedCalcNU": 162.580319950303,
+                            "spi:groupName": "Latin America",
+                            "spi:triTenureCL": "Leased",
                       "spi:triHeadcountNU": 0,
-                      "spi:triCountryTX": null,
-                      "spi:triGisLongitudeNU": 0,
-                      "spi:triBuildingClassCL": null,
+                            "spi:triCountryTX": "Brazil",
+                            "spi:triGisLongitudeNU": -43.255234,
+                            "spi:triBuildingClassCL": "Office",
+                            "spi:cstEnviziGroupNamePathTX": "Latin America\\Brazil\\Rio de Janeiro",
                       "spi:triAPICBuildingParent3LR": {
-                        "spi:triNameTX": "Asia Pacific2",
-                        "spi:triAPICBuildingParent2LR": {
-                          "spi:triNameTX": "A2-Offices2",
-                          "rdf:type": [
-                            {
-                              "rdf:resource": "http://jazz.net/ns/ism/smarter_physical_infrastructure#triAPICBuildingParent2RS"
-                            }
-                          ],
-                          "spi:triAPICBuildingParent1LR": {
-                            "spi:triNameTX": "Locations",
-                            "rdf:type": [
-                              {
-                                "rdf:resource": "http://jazz.net/ns/ism/smarter_physical_infrastructure#triAPICBuildingParent1RS"
-                              }
-                            ],
-                            "rdf:about": "http://localhost/oslc/so/triAPICBuildingParent1RS/213004"
+                                "rdf:resource": "http://localhost/oslc/so/triAPICBuildingParent3RS/13038683"
                           },
-                          "rdf:about": "http://localhost/oslc/so/triAPICBuildingParent2RS/135593183"
-                        },
-                        "rdf:type": [
-                          {
-                            "rdf:resource": "http://jazz.net/ns/ism/smarter_physical_infrastructure#triAPICBuildingParent3RS"
-                          }
-                        ],
-                        "rdf:about": "http://localhost/oslc/so/triAPICBuildingParent3RS/135593190"
-                      },
-                      "spi:triGisLatitudeNU": 0,
-                      "spi:triActiveStartDA": "2022-06-20",
-                      "spi:triStateProvTX": null,
-                      "spi:triNameTX": "Asia Pacific2",
-                      "spi:triEmailTX": null,
-                      "spi:triPrimaryUseCL": null,
+                            "spi:triGisLatitudeNU": -22.8072,
+                            "spi:triActiveStartDA": "2010-11-12",
+                            "spi:triStateProvTX": "Rio de Janeir",
+                            "spi:cstEnviziParentThreeTX": "Rio de Janeiro",
+                            "spi:triNameTX": "Rio Complex",
+                            "spi:triLegalNameTX": "Rio Complex",
+                            "spi:triPrimaryUseCL": "Sales",
                       "spi:triProRateBalanceToLI": "Balance To Measured",
-                      "spi:triLegalNameTX": null,
-                      "spi:triCurrencyUO": "US Dollars",
-                      "spi:triCityTX": null,
-                      "spi:triIdTX": "1000008",
-                      "spi:triZoningCL": null,
-                      "spi:action": "http://localhost/oslc/system/action/triAPICOutboundBuildingRS/135593281",
-                      "spi:contactOrganization": null,
+                            "spi:triCurrencyUO": "Brazilian real",
+                            "spi:triCityTX": "Rio de Janeiro",
+                            "spi:triIdTX": "LA002",
+                            "spi:triZoningCL": "Commercial",
+                            "spi:action": "http://localhost/oslc/system/action/triAPICOutboundBuildingRS/13042950",
                       "spi:triStatusCL": "Active",
-                      "spi:triPathTX": "\\Locations\\A2-Offices2\\Asia Pacific2\\Envizi-A2",
+                            "spi:triPathTX": "\\Locations\\Offices\\Latin America\\Rio Complex",
                       "spi:triParentPropertyTX": null,
-                      "spi:contactRole": null,
-                      "rdf:about": "http://localhost/oslc/so/triAPICOutboundBuildingRS/135593281",
-                      "spi:triAddressTX": null,
-                      "spi:triBuildingNameTX": "Envizi-A2",
-                      "dcterms:identifier": "135593281",
+                            "rdf:about": "http://localhost/oslc/so/triAPICOutboundBuildingRS/13042950",
+                            "spi:triAddressTX": "R. Theophilo Otoni, 52 - Centro",
+                            "dcterms:identifier": "13042950",
                       "spi:triActiveEndDA": null,
-                      "spi:triJurisdictionCL": null,
-                      "spi:triAreaUO": "square-feet",
-                      "spi:triDescriptionTX": null,
-                      "spi:triZipPostalTX": null,
-                      "spi:contactName": null,
-                      "spi:triModifiedSY": "2022-06-20T17:31:27.960+00:00",
-                      "spi:triLengthUO": "feet",
-                      "spi:triWorkPhoneTX": null
+                            "spi:triJurisdictionCL": "Local/Other",
+                            "spi:cstEnviziParentTwoTX": "Brazil",
+                            "spi:cstEnviziParentOneTX": "Latin America",
+                            "spi:triAreaUO": "square-meters",
+                            "spi:triDescriptionTX": "Rio Complex",
+                            "spi:triZipPostalTX": "20090-070",
+                            "spi:triModifiedSY": "2022-09-09T07:06:45.350+00:00",
+                            "spi:triLengthUO": "meters"
                     }
                   ],
                   "rdf:type": [
@@ -1057,126 +1033,81 @@ integration:
                       properties:
                         spi:triTotalAreaOccupiedCalcNU:
                           type: number
+                        spi:groupName:
+                          type: string
                         spi:triTenureCL:
-                          type: "null"
+                          type: string
                         spi:triHeadcountNU:
                           type: number
                         spi:triCountryTX:
-                          type: "null"
+                          type: string
                         spi:triGisLongitudeNU:
                           type: number
                         spi:triBuildingClassCL:
-                          type: "null"
-                        spi:cstEnviziParentOneTX:
                           type: string
-                        spi:cstEnviziParentTwoTX:
-                          type: string
-                        spi:cstEnviziParentThreeTX:
+                        spi:cstEnviziGroupNamePathTX:
                           type: string
                         spi:triAPICBuildingParent3LR:
                           type: object
                           properties:
-                            spi:triNameTX:
-                              type: string
-                            spi:triAPICBuildingParent2LR:
-                              type: object
-                              properties:
-                                spi:triNameTX:
-                                  type: string
-                                rdf:type:
-                                  type: array
-                                  items:
-                                    type: object
-                                    properties:
-                                      rdf:resource:
-                                        type: string
-                                spi:triAPICBuildingParent1LR:
-                                  type: object
-                                  properties:
-                                    spi:triNameTX:
-                                      type: string
-                                    rdf:type:
-                                      type: array
-                                      items:
-                                        type: object
-                                        properties:
-                                          rdf:resource:
-                                            type: string
-                                    rdf:about:
-                                      type: string
-                                rdf:about:
-                                  type: string
-                            rdf:type:
-                              type: array
-                              items:
-                                type: object
-                                properties:
                                   rdf:resource:
-                                    type: string
-                            rdf:about:
                               type: string
                         spi:triGisLatitudeNU:
                           type: number
                         spi:triActiveStartDA:
                           type: string
                         spi:triStateProvTX:
-                          type: "null"
+                          type: string
+                        spi:cstEnviziParentThreeTX:
+                          type: string
                         spi:triNameTX:
                           type: string
-                        spi:triEmailTX:
-                          type: "null"
+                        spi:triLegalNameTX:
+                          type: string
                         spi:triPrimaryUseCL:
-                          type: "null"
+                          type: string
                         spi:triProRateBalanceToLI:
                           type: string
-                        spi:triLegalNameTX:
-                          type: "null"
                         spi:triCurrencyUO:
                           type: string
                         spi:triCityTX:
-                          type: "null"
+                          type: string
                         spi:triIdTX:
                           type: string
                         spi:triZoningCL:
-                          type: "null"
+                          type: string
                         spi:action:
                           type: string
-                        spi:contactOrganization:
-                          type: "null"
                         spi:triStatusCL:
                           type: string
                         spi:triPathTX:
                           type: string
                         spi:triParentPropertyTX:
                           type: "null"
-                        spi:contactRole:
-                          type: "null"
                         rdf:about:
                           type: string
                         spi:triAddressTX:
-                          type: "null"
-                        spi:triBuildingNameTX:
                           type: string
                         dcterms:identifier:
                           type: string
                         spi:triActiveEndDA:
                           type: "null"
                         spi:triJurisdictionCL:
-                          type: "null"
+                          type: string
+                        spi:cstEnviziParentTwoTX:
+                          type: string
+                        spi:cstEnviziParentOneTX:
+                          type: string
                         spi:triAreaUO:
                           type: string
                         spi:triDescriptionTX:
-                          type: "null"
+                          type: string
                         spi:triZipPostalTX:
-                          type: "null"
-                        spi:contactName:
-                          type: "null"
+                          type: string
                         spi:triModifiedSY:
                           type: string
                         spi:triLengthUO:
                           type: string
-                        spi:triWorkPhoneTX:
-                          type: "null"
                   rdf:type:
                     type: array
                     items:
@@ -1264,27 +1195,21 @@ integration:
                                 - DESCRIPTION:
                                     template: '{{$buildingsCSVItem."spi:triDescriptionTX"}}'
                                 - GROUPNAME1:
-                                    template: '{{ $buildingsCSVItem."spi:cstEnviziParentOneTX"
-                                      ?$buildingsCSVItem."spi:cstEnviziParentOneTX":
-                                      $buildingsCSVItem."spi:triAPICBuildingParent3LR"."spi:triAPICBuildingParent2LR"."spi:triAPICBuildingParent1LR"."spi:triNameTX"}}'
+                                    template: '{{$buildingsCSVItem."spi:cstEnviziParentOneTX"}}'
                                 - GROUPNAME2:
-                                    template: '{{ $buildingsCSVItem."spi:cstEnviziParentTwoTX"
-                                      ?$buildingsCSVItem."spi:cstEnviziParentTwoTX":
-                                      $buildingsCSVItem."spi:triAPICBuildingParent3LR"."spi:triAPICBuildingParent2LR"."spi:triNameTX"}}'
+                                    template: '{{$buildingsCSVItem."spi:cstEnviziParentTwoTX"}}'
                                 - GROUPNAME3:
-                                    template: '{{ $buildingsCSVItem."spi:cstEnviziParentThreeTX"
-                                      ?$buildingsCSVItem."spi:cstEnviziParentThreeTX":
-                                      $buildingsCSVItem."spi:triAPICBuildingParent3LR"."spi:triNameTX"}}'
+                                    template: '{{$buildingsCSVItem."spi:cstEnviziParentThreeTX"}}'
                                 - LATITUDEY:
                                     template: '{{$buildingsCSVItem."spi:triGisLatitudeNU"}}'
                                 - LOCATION:
                                     template: '{{$buildingsCSVItem."spi:triNameTX"}}'
+                                - LOCATIONCLOSEDATE:
+                                    template: '{{$buildingsCSVItem."spi:triActiveEndDA"}}'
                                 - LOCATIONID:
                                     template: '{{$buildingsCSVItem."spi:triIdTX"}}'
                                 - LONGITUDEX:
                                     template: '{{$buildingsCSVItem."spi:triGisLongitudeNU"}}'
-                                - LOCATIONCLOSEDATE:
-                                    template: '{{$buildingsCSVItem."spi:triActiveEndDA"}}'
                                 - POSTALCODE:
                                     template: '{{$buildingsCSVItem."spi:triZipPostalTX"}}'
                                 - STATEPROVINCE:
@@ -1594,12 +1519,8 @@ integration:
                     $ref: "#/block/For each/node-output/Set variable 8/response/payload"
                   - variable: Setvariable
                     $ref: "#/node-output/Set variable/response/payload"
-                  - variable: HTTPInvokemethod3
-                    $ref: "#/node-output/HTTP Invoke method 3/response/payload"
-                  - variable: HTTPInvokemethod3Metadata
-                    $ref: "#/node-output/HTTP Invoke method 3/response"
-                  - variable: JSONParserParse3
-                    $ref: "#/node-output/JSON Parser Parse 3/response/payload"
+                  - variable: If
+                    $ref: "#/node-output/If/response/payload"
                   - variable: Setvariable2
                     $ref: "#/node-output/Set variable 2/response/payload"
                   - variable: Setvariable3
@@ -1650,12 +1571,8 @@ integration:
                     $ref: "#/block/For each/node-output/SFTP Create file/response/payload"
                   - variable: Setvariable
                     $ref: "#/node-output/Set variable/response/payload"
-                  - variable: HTTPInvokemethod3
-                    $ref: "#/node-output/HTTP Invoke method 3/response/payload"
-                  - variable: HTTPInvokemethod3Metadata
-                    $ref: "#/node-output/HTTP Invoke method 3/response"
-                  - variable: JSONParserParse3
-                    $ref: "#/node-output/JSON Parser Parse 3/response/payload"
+                  - variable: If
+                    $ref: "#/node-output/If/response/payload"
                   - variable: Setvariable2
                     $ref: "#/node-output/Set variable 2/response/payload"
                   - variable: Setvariable3
