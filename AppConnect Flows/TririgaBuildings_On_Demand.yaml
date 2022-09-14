@@ -1813,5 +1813,5 @@ integration:
                               "measureUnitID":$Foreach2item."spi:triAreaUO"}
                         - headCount:
                             expression: "{    \"location\":$Foreach2item.\"spi:triNameTX\",        \t\"locationID\":$Foreach2item.\"spi:triIdTX\",        \t\"meterName\":\"HEADCOUNT\",\t\"reading\":$Foreach2item.\"spi:triHeadcountNU\",        \t\"readingDate\":$Foreach2item.\"spi:triModifiedSY\",        \t\"account\":$Foreach2item.\"spi:triIdTX\"&\"_HEADCOUNT\",        \t\"dataType\":\"HEADCOUNT\"}"
-  name: TririgaBuildings_On_Demand
+  name: TririgaBuildings_On_Demand_v1_0_0
 models: {}
