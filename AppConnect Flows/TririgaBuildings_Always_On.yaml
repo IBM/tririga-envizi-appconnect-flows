@@ -111,6 +111,8 @@ integration:
                             type: string
                           OverrideToDate:
                             type: string
+                      version:
+                        type: string
                 input:
                   - variable: Trigger
                     $ref: "#/trigger/payload"
