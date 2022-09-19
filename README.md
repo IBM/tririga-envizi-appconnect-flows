@@ -16,6 +16,9 @@
       * [Configuring the Flow Parameters](#configuring-the-flow-parameters)
     * [Starting and Stopping the flow](#starting-and-stopping-the-flow)
   * [Post-Setup Instructions](#post-setup-instructions)
+  * [Field Mapping](#field-mapping)
+    * [Buildings](#buildings)
+    * [Accounts](#accounts)
 <!--te-->
 
 ## Overview
@@ -161,3 +164,39 @@ _Note: If the flow is not running, AppConnect will give Error 404 on the API cal
 The Envizi implementation team will support the next steps of the integration by provisioning the file transfer details, enabling Envizi data connectors and validating the Envizi configuration ready to receive the data flow.
 
 Please reach out to the primary contact at Envizi who can help coordinate next steps.
+
+
+## Field Mapping
+
+### Buildings
+
+
+| CSV Headers       | Tririga Fields             | Comments                                                                                                               |
+|-------------------|----------------------------|------------------------------------------------------------------------------------------------------------------------|
+| CITY              | spi:triCityTX              |                                                                                                                        |
+| COUNTRY           | spi:triCountryTX           |                                                                                                                        |
+| DESCRIPTION       | spi:triDescriptionTX       |                                                                                                                        |
+| GROUPNAME1        | spi:cstEnviziParentOneTX   | Value for this field will be available only after Location Hierarchy mapping for Envizi groups is completed on Tririga |
+| GROUPNAME2        | spi:cstEnviziParentTwoTX   | Value for this field will be available only after Location Hierarchy mapping for Envizi groups is completed on Tririga |
+| GROUPNAME3        | spi:cstEnviziParentThreeTX | Value for this field will be available only after Location Hierarchy mapping for Envizi groups is completed on Tririga |
+| LATITUDEY         | spi:triGisLatitudeNU       |                                                                                                                        |
+| LOCATION          | spi:triNameTX              |                                                                                                                        |
+| LOCATIONCLOSEDATE | spi:triActiveEndDA         |                                                                                                                        |
+| LOCATIONID        | spi:triIdTX                |                                                                                                                        |
+| LONGITUDEX        | spi:triGisLongitudeNU      |                                                                                                                        |
+| POSTALCODE        | spi:triZipPostalTX         |                                                                                                                        |
+| STATEPROVINCE     | spi:triStateProvTX         |                                                                                                                        |
+| STREETADDRESS     | spi:triAddressTX           |                                                                                                                        |
+
+### Accounts
+
+| CSV Header    | Tririga Field                                        | Comment |
+|---------------|------------------------------------------------------|---------|
+| ACCOUNT       | spi:triIdTX + ("_HEADCOUNT" or "_FLOORAREA")         |         |
+| DATATYPE      | "HEADCOUNT" or "FLOORAREA"                           |         |
+| LOCATION      | spi:triNameTX                                        |         |
+| LOCATIONID    | spi:triIdTX                                          |         |
+| MEASUREUNITID | spi:triAreaUO                                        |         |
+| METERNAME     | "HEADCOUNT" or "FLOORAREA"                           |         |
+| READING       | spi:triHeadcountNU or spi:triTotalAreaOccupiedCalcNU |         |
+| READINGDATE   | spi:triModifiedSY                                    |         |
