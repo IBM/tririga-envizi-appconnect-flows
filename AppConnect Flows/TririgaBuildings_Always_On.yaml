@@ -1054,7 +1054,7 @@ integration:
                         spi:triAPICBuildingParent3LR:
                           type: object
                           properties:
-                                  rdf:resource:
+                              rdf:resource:
                               type: string
                         spi:triGisLatitudeNU:
                           type: number
