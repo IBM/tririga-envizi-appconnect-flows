@@ -3,21 +3,22 @@
 ## Table of Contents
 
 <!--ts-->
+  * [Overview](#overview)
   * [Security Role Configuration](#security-role-configuration)
     * [Object Migration Access](#object-migration-access)
-  * [Import OM Package](#import-om-package)
-  * [Tririga API User Access](#tririga-api-user-access)
+    * [Import OM Package](#import-om-package)
+    * [Tririga API User Access](#tririga-api-user-access)
     * [Outbound Traffic](#outbound-traffic-from-tririga)
     * [Inbound Traffic](#inbound-traffic-to-tririga)
-  * [Data Modeler](#data-modeler)
-  * [Form Builder](#form-builder)
-  * [Security Manager](#security-manager)
-  * [Workflow Builder](#workflow-builder)
-    * [Optional: Patch Helper](#optional-step)
-  * [My Reports/OSLC](#my-reports-and-oslc)
+  * [Group Name Configuration](#group-name-configuration)
+    * [Data Modeler](#data-modeler)
+    * [Form Builder](#form-builder)
+    * [Security Manager](#security-manager)
+    * [Workflow Builder](#workflow-builder)
+    * [My Reports/OSLC](#my-reports-and-oslc)
   * [How to Use](#how-to-use)
 
-
+## Overview
 This solution adds four fields that hold the group name values and the path for the integration. It also makes sure that the payload is sent when there is an update.
 
 ### Security Role Configuration
@@ -25,7 +26,9 @@ In order to properly configure Tririga, a user needs to be configured with the p
 
 #### Object Migration Access
 
-Begin by creating a Security Group with the proper application access. Go to Tools -> Administration -> Security Manager
+Object Migration is a task managed by administrators. If a Tririga User needs to have full access to Object Migration in Tririga, access is granted at the group level through the following steps:  
+
+Go to Tools -> Administration -> Security Manager.
 
 <img width="1076" alt="Security Manager" src="https://media.github.ibm.com/user/348712/files/ba5bd700-1a45-11ed-8b1a-3cf09869b74b">
 
@@ -39,17 +42,41 @@ Switch to the 'Access' tab and add the appropriate access to allow for importati
 
 The users in this group, granted through the Members tab, will be able to import the Tririga API Object Migration package. 
 
-Please refer to official IBM® Tririga documentation for more information on Object Migration: 
+Additional information on Tririga Security groups can be found here: 
 
-https://www.ibm.com/docs/en/tap/3.6.1?topic=objects-object-migration-overview  
+https://www.ibm.com/docs/en/tap/3.6.1?topic=security-groups 
 
 ### Import OM Package
 
 Import the most recent [OM Package](https://github.com/IBM/tririga-api/tree/main/docs/ompackages) into the Tririga instance. Go to Tools -> Administration -> Object Migration and select 'New Import Package' to begin the import process.
 
+Please refer to official IBM® Tririga documentation for more information on Object Migration: 
+
+https://www.ibm.com/docs/en/tap/3.6.1?topic=objects-object-migration-overview  
+
 ### Tririga API User Access
 
-Once the OM Package is imported into the environment, a Tririga user is needed to make the API calls. The user will need certain user permissions based on which Tririga Modules they need to interact with. The Tririga API allows for both Inbound and Outbound traffic.
+In order for AppConnect to be able to use Tririga APIs, it will need a user with certain permissions. These user's credentials will be configured in AppConnect.
+
+Create a new user by following the steps given in Chapter 2 [here](https://www.ibm.com/docs/en/SSFCZ3_11.2/pdf/pdf_tri_app_admin.pdf).
+
+Choose a security group or create a new group (refer to [the above OM Migration steps](#object-migration-access) if a new security group needs to be created) and add the newly created user to it.
+
+Add the permissions below for the new user's group:
+  | Module        |     Business Object     |     Permissions    |
+  |---------------|-------------------------|--------------------|
+  | Location      |     triBuilding         |     Read           |
+  | triAPIConnect |     triAPICTimestamp    | Read and Update    |
+  
+  
+Follow the steps given in Chapter 1 [here](https://www.ibm.com/docs/en/SSFCZ3_11.2/pdf/pdf_tri_app_admin.pdf) and add **any one of the licenses below** for the new user's group:
+  - IBM TRIRIGA Portfolio Data Manager
+  - IBM Facilities and Real Estate Management on Cloud Self Service
+  - Any other license that grants access to the modules
+
+Please refer to the TRIRIGA Documentation on Security and Licenses by following this link: https://www.ibm.com/docs/en/tap/3.6.1?topic=platform-license-files  
+  
+The user will now be able to interact with the proper Tririga Modules.
 
 #### Outbound Traffic from Tririga
 
@@ -70,30 +97,27 @@ Organization |[Organization](https://github.com/IBM/tririga-api/blob/main/markdo
 Request |[Service Request](https://github.com/IBM/tririga-api/blob/main/markdowns/ServiceRequest.md)
 Task |[Work Task](https://github.com/IBM/tririga-api/blob/main/markdowns/WorkTask.md)
 
-In the example below, the API user is able to pull data from the Property Business Object: 
+In the example below, the API user is able to pull data from the Building Business Object: 
 
-<img width="1097" alt="Outbound Business Object" src="https://media.github.ibm.com/user/348712/files/baf46d80-1a45-11ed-8a28-9250be0c8e21">
+<img width="1097" alt="Outbound Business Object" src="https://media.github.ibm.com/user/348712/files/ebe9b700-3b48-11ed-9b3d-ca237f33f496">
 
 #### Inbound traffic to Tririga
 
-For inbound traffic, Data Access needs to be enabled and Application Access permissions to the triAPIConnect Module or the individual Objects. To enable an API user to create an organization, grant access to the triAPICOrganization Business object as shown below: 
+For inbound traffic, Data Access needs to be enabled as well as Application Access permissions to the triAPIConnect Module or the individual Objects. To enable an API user to create a building, grant access to the triAPICBuilding Business object as shown below: 
 
-<img width="1000" alt="Inbound Traffic Business Object" src="https://media.github.ibm.com/user/348712/files/bb8d0400-1a45-11ed-99b1-f598efa63db1">
+<img width="1000" alt="Inbound Traffic Business Object" src="https://media.github.ibm.com/user/348712/files/ebe9b700-3b48-11ed-89b4-c5c0cff08d14">
 
-In addition to Data Access and Application access, the API user also needs to have appropriate license(s) to make these calls. Please refer to the Tririga Documentation on Security and Licenses by following this link: 
+#### Minimum requirements
 
-https://www.ibm.com/docs/en/tap/3.6.1?topic=platform-license-files 
+For users to pull from these URLs, the minimum requirements are:
 
-
-Additional information on Tririga Security groups can be found here: 
-
-https://www.ibm.com/docs/en/tap/3.6.1?topic=security-groups 
-
-
-
+URL | Requirement
+--|--
+GET /oslc/spq/triAPICOutboundBuildingQC  | READ access to triBuilding Business object
+GET /oslc/spq/triAPICTimeStampQC  | READ access to triAPICTimestamp Business Object 
+POST /oslc/so/triAPICTimeStampRS/<ID> | Write access to triAPICTimestamp Business Object 
 
 ## Group Name Configuration
-
 
 
 ### Data Modeler
@@ -200,20 +224,38 @@ new fields either individually or using 'Import all Fields'
 
 Go to Tools->Builder Tools-> Navigation Builder and find TRIRIGA Global Menu(or the menu associated to the user that will need access to the app). Select and click Edit
 
-<img width="600" alt="Navigation-builder-1" src="https://media.github.ibm.com/user/348712/files/27c34480-3a95-11ed-89ca-17ce43fdeb1d">
+<img width="700" alt="Navigation-builder-1" src="https://media.github.ibm.com/user/348712/files/27c34480-3a95-11ed-89ca-17ce43fdeb1d">
 
 On navigation Items section, expand Landing Page –Tools -> Menu Group –System Setup. Select Menu group –Integration and expand Navigations Item Library
 
-<img width="900" alt="Navigation-builder-2" src="https://media.github.ibm.com/user/348712/files/272aae00-3a95-11ed-85a2-1cb9a42d6900">
+<img width="700" alt="Navigation-builder-2" src="https://media.github.ibm.com/user/348712/files/272aae00-3a95-11ed-85a2-1cb9a42d6900">
 
 Search for Envizi, select the item and click on Add to Collection
 
-<img width="600" alt="Navigation-builder-3" src="https://media.github.ibm.com/user/348712/files/272aae00-3a95-11ed-8777-57d9809f75dd">
+<img width="414" alt="Navigation-builder-3" src="https://media.github.ibm.com/user/348712/files/272aae00-3a95-11ed-8777-57d9809f75dd">
 
 
 Click Save. Logout and Login again to the system
 
-### How to use
+## How to use
+
+### Time Stamp Pre-requisite
+
+The triAPICTimestamp is a tririga record needed to set the baseline for when API connect runs for the first time. 
+
+To enable this functionality go to My Reports -> System Reports and search for Timestamp in the 'Name' section. Run the system report "triAPICTimestamp – Display – Manager Query" as shown below:
+
+<img width="700" alt="Time-Stamp-1" src="https://media.github.ibm.com/user/348712/files/6a495780-3b4f-11ed-8fe9-9d2fb3bd5f31">
+
+Click Add, and create a new record without details, as shown below, and close it
+
+<img width="700" alt="Time-Stamp-2" src="https://media.github.ibm.com/user/348712/files/6a495780-3b4f-11ed-940d-137135ba303d">
+
+The default date and time the record gets automatically applied to the record, and consequent opening of the record shows the default date and time as shown below:
+
+<img width="700" alt="Time-Stamp-3" src="https://media.github.ibm.com/user/348712/files/69b0c100-3b4f-11ed-95fc-1848213524cf">
+
+### Using the Integration
 
 This tool will allow user to make changes on this new Envizi group name fields. But we must consider the existing records too. If you want those records to be populated, there is a patch helper workflow that can handle that.
 
@@ -225,7 +267,7 @@ Enable Envizi checkbox is available too. The envizi tab will be displayed only w
 
 One more item that must be configured is the Number of levels to be used on the envizi configuration. Envizihierarchy path will match this selection.
 
-<img width="1000" alt="How-to-use" src="https://media.github.ibm.com/user/348712/files/21cd6380-3a95-11ed-800d-aa0c22556421">
+<img width="414" alt="How-to-use" src="https://media.github.ibm.com/user/348712/files/21cd6380-3a95-11ed-800d-aa0c22556421">
 
 Also, notice that there is a section named “Active/Retire with missing data”and “Draft/Revision with Missing Data”. This section will list the buildings that don’t have data defined for envizi group 3, so it means that no envizi group will be populated on those buildings.
 
@@ -234,7 +276,6 @@ You can filter to change only the desired records by changing query “cst -triB
 
 To use the tool, just select the desired envizi group names and click Save. On the moment Save is triggered, all buildings will be populated with the desired options. This process may take a few minutes depending on how many buildings you have on your system. After that envizi groups and path will be updated according to the selections made on Envizi Integration page.
 
-<img width="1000" alt="How-to-use-2" src="https://media.github.ibm.com/user/348712/files/27c34480-3a95-11ed-9dc8-b6347de21bee">
+<img width="414" alt="How-to-use-2" src="https://media.github.ibm.com/user/348712/files/27c34480-3a95-11ed-9dc8-b6347de21bee">
 
 Also, every time a building is saved and there are changes on the defined fields, or a new building is created, the envizi groups and path will be modifiedaccording to the selected options. You can find the groups on tab Envizi on the building record
-
