@@ -1,0 +1,1763 @@
+$integration: http://ibm.com/appconnect/integration/v2/integrationFile
+integration:
+  type: trigger-action
+  trigger-interfaces:
+    trigger-interface-1:
+      connector-type: streaming-connector-scheduler
+      type: event-trigger
+      triggers:
+        SCHEDULE:
+          input-context:
+            data: scheduler
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          options:
+            subscription:
+              scheduleConfiguration:
+                interval:
+                  unit: minute
+                  value: 2
+                  runOnceOncheck: true
+                  days:
+                    - MON
+                    - TUE
+                    - WED
+                    - THU
+                    - FRI
+                    - SAT
+                    - SUN
+                  timeZone: UTC
+      account-name: Account 2
+  action-interfaces:
+    action-interface-2:
+      type: api-action
+      business-object: request
+      connector-type: http
+      account-name: Tririga
+      actions:
+        INVOKE: {}
+    action-interface-5:
+      type: api-action
+      business-object: request
+      connector-type: http
+      account-name: Tririga
+      actions:
+        INVOKE: {}
+    action-interface-11:
+      type: api-action
+      business-object: request
+      connector-type: http
+      account-name: Tririga
+      actions:
+        INVOKE: {}
+    action-interface-13:
+      type: api-action
+      business-object: file
+      connector-type: sftp
+      account-name: Envizi
+      actions:
+        CREATE: {}
+    action-interface-14:
+      type: api-action
+      business-object: file
+      connector-type: sftp
+      account-name: Envizi
+      actions:
+        CREATE: {}
+    action-interface-9:
+      type: api-action
+      business-object: request
+      connector-type: http
+      account-name: Tririga
+      actions:
+        INVOKE: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - set-variable:
+              name: Set variable
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      query:
+                        type: object
+                        properties:
+                          select:
+                            type: string
+                          from:
+                            type: string
+                          where:
+                            type: string
+                          orderBy:
+                            type: string
+                          pageSize:
+                            type: number
+                      config:
+                        type: object
+                        properties:
+                          customer:
+                            type: string
+                          triAPICTimeStampQCField:
+                            type: string
+                          triURL:
+                            type: string
+                          targetDateColumn:
+                            type: string
+                          OverrideFromDate:
+                            type: string
+                          OverrideToDate:
+                            type: string
+                      version:
+                        type: string
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - config:
+                            mappings:
+                              - customer:
+                                  template: AlwaysOn8002
+                              - targetDateColumn:
+                                  template: spi:triModifiedSY
+                              - triAPICTimeStampQCField:
+                                  template: spi:triFetchBuildingDateTimeDT
+                              - triURL:
+                                  template: >-
+                                    http://cap-sg-prd-5.securegateway.appdomain.cloud:17873
+                        - query:
+                            mappings:
+                              - from:
+                                  template: triAPICOutboundBuildingQC
+                              - pageSize:
+                                  expression: '100'
+                              - select:
+                                  template: '*'
+                              - where:
+                                  template: spi:triStatusCL in ["Active","Retired"]
+                        - version:
+                            template: 1.0.1
+          - if:
+              name: If
+              input:
+                - variable: Trigger
+                  $ref: '#/trigger/payload'
+                - variable: Setvariable
+                  $ref: '#/node-output/Set variable/response/payload'
+                - variable: flowDetails
+                  $ref: '#/flowDetails'
+              branch:
+                - condition:
+                    and:
+                      - '{{$Setvariable.variable.config.OverrideFromDate}}':
+                          neq: ''
+                      - '{{$Setvariable.variable.config.OverrideToDate}}':
+                          neq: ''
+                      - '{{$toMillis($Setvariable.variable.config.OverrideFromDate)}}':
+                          gte: '0'
+                      - '{{$toMillis($Setvariable.variable.config.OverrideToDate)}}':
+                          gt: '0'
+                  execute: []
+                  map:
+                    $map: http://ibm.com/appconnect/map/v1
+                    input:
+                      - variable: Trigger
+                        $ref: '#/trigger/payload'
+                      - variable: Setvariable
+                        $ref: '#/node-output/Set variable/response/payload'
+                      - variable: flowDetails
+                        $ref: '#/flowDetails'
+                    mappings:
+                      - dateQuery:
+                          template: >-
+                            {{$Setvariable.variable.config.targetDateColumn &
+                            ">=\"" &
+                            $Setvariable.variable.config.OverrideFromDate & "\""
+                            & " AND " &   
+                            $Setvariable.variable.config.targetDateColumn &
+                            "<=\"" & $Setvariable.variable.config.OverrideToDate
+                            & "\""}}
+                      - isOnDemand:
+                          expression: 'true'
+              else:
+                execute:
+                  - custom-action:
+                      name: HTTP Invoke method 3
+                      target:
+                        $ref: '#/integration/action-interfaces/action-interface-9'
+                      action: INVOKE
+                      map:
+                        mappings:
+                          - continue2xx:
+                              expression: 'false'
+                          - method:
+                              template: GET
+                          - url:
+                              template: >-
+                                {{$Setvariable.variable.config.triURL}}/oslc/spq/triAPICTimeStampQC?oslc.select={{$Setvariable.variable.config.triAPICTimeStampQCField}},dcterms:identifier
+                        $map: http://ibm.com/appconnect/map/v1
+                        input:
+                          - variable: Trigger
+                            $ref: '#/trigger/payload'
+                          - variable: Setvariable
+                            $ref: '#/node-output/Set variable/response/payload'
+                          - variable: flowDetails
+                            $ref: '#/flowDetails'
+                  - parse:
+                      name: JSON Parser Parse 3
+                      parse-format: json
+                      source:
+                        template: '{{$HTTPInvokemethod3.responseBody}} '
+                        input:
+                          - variable: Trigger
+                            $ref: '#/trigger/payload'
+                          - variable: HTTPInvokemethod3
+                            $ref: >-
+                              #/block/If/node-output/HTTP Invoke method
+                              3/response/payload
+                          - variable: HTTPInvokemethod3Metadata
+                            $ref: >-
+                              #/block/If/node-output/HTTP Invoke method
+                              3/response
+                          - variable: Setvariable
+                            $ref: '#/node-output/Set variable/response/payload'
+                          - variable: flowDetails
+                            $ref: '#/flowDetails'
+                      sample-data: |-
+                        {
+                          "prefixes": {
+                            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+                            "dcterms": "http://purl.org/dc/terms/",
+                            "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                            "spi": "http://jazz.net/ns/ism/smarter_physical_infrastructure#",
+                            "oslc": "http://open-services.net/ns/core#"
+                          },
+                          "rdfs:member": [
+                            {
+                              "dcterms:identifier": "135600923",
+                              "spi:triFetchPeopleDateTimeDT": "2021-01-04T14:55:00+00:00",
+                              "spi:action": "http://localhost/oslc/system/action/triAPICTimeStampRS/135600923",
+                              "spi:triFetchBuildingDateTimeDT": "2022-07-01T19:00:00+00:00",
+                              "spi:triFetchWorkTaskDateTimeDT": "2022-05-04T13:35:00+00:00",
+                              "rdf:about": "http://localhost/oslc/so/triAPICTimeStampRS/135600923"
+                            }
+                          ],
+                          "rdf:type": [
+                            {
+                              "rdf:resource": "http://www.w3.org/2000/01/rdf-schema#Container"
+                            }
+                          ],
+                          "rdf:about": "http://localhost/oslc/spq"
+                        }
+                      output-schema:
+                        $schema: http://json-schema.org/draft-04/schema#
+                        type: object
+                        properties:
+                          prefixes:
+                            type: object
+                            properties:
+                              rdf:
+                                type: string
+                              dcterms:
+                                type: string
+                              rdfs:
+                                type: string
+                              spi:
+                                type: string
+                              oslc:
+                                type: string
+                          rdfs:member:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                dcterms:identifier:
+                                  type: string
+                                spi:triFetchPeopleDateTimeDT:
+                                  type: string
+                                spi:action:
+                                  type: string
+                                spi:triFetchBuildingDateTimeDT:
+                                  type: string
+                                spi:triFetchWorkTaskDateTimeDT:
+                                  type: string
+                                rdf:about:
+                                  type: string
+                          rdf:type:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                rdf:resource:
+                                  type: string
+                          rdf:about:
+                            type: string
+                        title: Parsed JSON
+                map:
+                  mappings:
+                    - dateQuery:
+                        template: >-
+                          {{   
+                          $Setvariable.variable.config.targetDateColumn&">=\""   
+                          &
+                          $lookup($JSONParserParse3."rdfs:member"[0],$Setvariable.variable.config.triAPICTimeStampQCField
+                          )    & "\""}}
+                    - isOnDemand:
+                        expression: 'false'
+                    - timestampId:
+                        template: >-
+                          {{$lookup($JSONParserParse3."rdfs:member"[0],"dcterms:identifier")}}
+                  $map: http://ibm.com/appconnect/map/v1
+                  input:
+                    - variable: Trigger
+                      $ref: '#/trigger/payload'
+                    - variable: HTTPInvokemethod3
+                      $ref: >-
+                        #/block/If/node-output/HTTP Invoke method
+                        3/response/payload
+                    - variable: HTTPInvokemethod3Metadata
+                      $ref: '#/block/If/node-output/HTTP Invoke method 3/response'
+                    - variable: JSONParserParse3
+                      $ref: >-
+                        #/block/If/node-output/JSON Parser Parse
+                        3/response/payload
+                    - variable: Setvariable
+                      $ref: '#/node-output/Set variable/response/payload'
+                    - variable: flowDetails
+                      $ref: '#/flowDetails'
+              output-schema:
+                type: object
+                properties:
+                  dateQuery:
+                    type: string
+                  isOnDemand:
+                    type: boolean
+                  timestampId:
+                    type: string
+                required:
+                  - dateQuery
+                  - isOnDemand
+          - set-variable:
+              name: Set variable 2
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      pageSize:
+                        type: number
+                      fromDate:
+                        type: string
+                      dateQuery:
+                        type: string
+                      batchTimestamp:
+                        type: string
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - batchTimestamp:
+                            template: '{{$millis()}}'
+                        - pageSize:
+                            expression: >-
+                              $Setvariable.variable.query.pageSize ?
+                              $Setvariable.variable.query.pageSize : 100
+          - set-variable:
+              name: Set variable 3
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      where:
+                        type: string
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - where:
+                            template: >-
+                              &oslc.where={{$encodeUrlComponent($Setvariable.variable.query.where
+                              ? $Setvariable.variable.query.where & " AND " &
+                              $If.dateQuery  :  $If.dateQuery )}}
+          - set-variable:
+              name: Set variable 4
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      query:
+                        type: string
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                mappings:
+                  - variable:
+                      mappings:
+                        - query:
+                            template: >-
+                              {{(    /* build query parameters, remove empty or
+                              nulls */    $select :=
+                              $boolean($Setvariable.variable.query.select) ?
+                              "&oslc.select=" &
+                              $Setvariable.variable.query.select;       
+                              $orderBy :=
+                              $boolean($Setvariable.variable.query.orderBy) ?
+                              "&oslc.orderBy="&
+                              $Setvariable.variable.query.orderBy;    $params :=
+                              $select & $Setvariable3.variable.where & $orderBy
+                              ;    $substringAfter($params, "&");  /* elminate
+                              first ampersand */)}}
+          - custom-action:
+              name: HTTP Invoke method
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-2'
+              action: INVOKE
+              map:
+                customSchemas: {}
+                mappings:
+                  - continue2xx:
+                      expression: 'false'
+                  - method:
+                      template: GET
+                  - url:
+                      template: >-
+                        {{$Setvariable.variable.config.triURL}}/oslc/spq/{{$Setvariable.variable.query.from}}?{{$Setvariable4.variable.query}}&oslc.pageSize=1&pageno=1
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+          - parse:
+              name: JSON Parser Parse 2
+              parse-format: json
+              source:
+                template: '{{$HTTPInvokemethod.responseBody}}'
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+              sample-data: |-
+                {
+                    "prefixes": {
+                        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+                        "dcterms": "http://purl.org/dc/terms/",
+                        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                        "spi": "http://jazz.net/ns/ism/smarter_physical_infrastructure#",
+                        "oslc": "http://open-services.net/ns/core#"
+                    },
+                    "oslc:responseInfo": {
+                        "oslc:nextPage": {
+                            "rdf:resource": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?oslc.select=*&oslc.pageSize=1&pageno=3"
+                        },
+                        "oslc:totalCount": 194,
+                        "rdf:about": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?pageno=1&oslc.select=*&oslc.pageSize=1"
+                    },
+                    "rdfs:member": [
+                        {
+                            "spi:triTotalAreaOccupiedCalcNU": 162.580319950303,
+                            "spi:groupName": "Latin America",
+                            "spi:triTenureCL": "Leased",
+                            "spi:triHeadcountNU": 0,
+                            "spi:triCountryTX": "Brazil",
+                            "spi:triGisLongitudeNU": -43.255234,
+                            "spi:triBuildingClassCL": "Office",
+                            "spi:cstEnviziGroupNamePathTX": "Latin America\\Brazil\\Rio de Janeiro",
+                            "spi:triAPICBuildingParent3LR": {
+                                "rdf:resource": "http://localhost/oslc/so/triAPICBuildingParent3RS/13038683"
+                            },
+                            "spi:triGisLatitudeNU": -22.8072,
+                            "spi:triActiveStartDA": "2010-11-12",
+                            "spi:triStateProvTX": "Rio de Janeir",
+                            "spi:cstEnviziParentThreeTX": "Rio de Janeiro",
+                            "spi:triNameTX": "Rio Complex",
+                            "spi:triLegalNameTX": "Rio Complex",
+                            "spi:triPrimaryUseCL": "Sales",
+                            "spi:triProRateBalanceToLI": "Balance To Measured",
+                            "spi:triCurrencyUO": "Brazilian real",
+                            "spi:triCityTX": "Rio de Janeiro",
+                            "spi:triIdTX": "LA002",
+                            "spi:triZoningCL": "Commercial",
+                            "spi:action": "http://localhost/oslc/system/action/triAPICOutboundBuildingRS/13042950",
+                            "spi:triStatusCL": "Active",
+                            "spi:triPathTX": "\\Locations\\Offices\\Latin America\\Rio Complex",
+                            "spi:triParentPropertyTX": null,
+                            "rdf:about": "http://localhost/oslc/so/triAPICOutboundBuildingRS/13042950",
+                            "spi:triAddressTX": "R. Theophilo Otoni, 52 - Centro",
+                            "dcterms:identifier": "13042950",
+                            "spi:triActiveEndDA": null,
+                            "spi:triJurisdictionCL": "Local/Other",
+                            "spi:cstEnviziParentTwoTX": "Brazil",
+                            "spi:cstEnviziParentOneTX": "Latin America",
+                            "spi:triAreaUO": "square-meters",
+                            "spi:triDescriptionTX": "Rio Complex",
+                            "spi:triZipPostalTX": "20090-070",
+                            "spi:triModifiedSY": "2022-09-09T07:06:45.350+00:00",
+                            "spi:triLengthUO": "meters"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "rdf:resource": "http://www.w3.org/2000/01/rdf-schema#Container"
+                        }
+                    ],
+                    "rdf:about": "http://localhost/oslc/spq"
+                }
+              output-schema:
+                $schema: http://json-schema.org/draft-04/schema#
+                type: object
+                properties:
+                  prefixes:
+                    type: object
+                    properties:
+                      rdf:
+                        type: string
+                      dcterms:
+                        type: string
+                      rdfs:
+                        type: string
+                      spi:
+                        type: string
+                      oslc:
+                        type: string
+                  oslc:responseInfo:
+                    type: object
+                    properties:
+                      oslc:nextPage:
+                        type: object
+                        properties:
+                          rdf:resource:
+                            type: string
+                      oslc:totalCount:
+                        type: number
+                      rdf:about:
+                        type: string
+                  rdfs:member:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        spi:triTotalAreaOccupiedCalcNU:
+                          type: number
+                        spi:groupName:
+                          type: string
+                        spi:triTenureCL:
+                          type: string
+                        spi:triHeadcountNU:
+                          type: number
+                        spi:triCountryTX:
+                          type: string
+                        spi:triGisLongitudeNU:
+                          type: number
+                        spi:triBuildingClassCL:
+                          type: string
+                        spi:cstEnviziGroupNamePathTX:
+                          type: string
+                        spi:triAPICBuildingParent3LR:
+                          type: object
+                          properties:
+                            rdf:resource:
+                              type: string
+                        spi:triGisLatitudeNU:
+                          type: number
+                        spi:triActiveStartDA:
+                          type: string
+                        spi:triStateProvTX:
+                          type: string
+                        spi:cstEnviziParentThreeTX:
+                          type: string
+                        spi:triNameTX:
+                          type: string
+                        spi:triLegalNameTX:
+                          type: string
+                        spi:triPrimaryUseCL:
+                          type: string
+                        spi:triProRateBalanceToLI:
+                          type: string
+                        spi:triCurrencyUO:
+                          type: string
+                        spi:triCityTX:
+                          type: string
+                        spi:triIdTX:
+                          type: string
+                        spi:triZoningCL:
+                          type: string
+                        spi:action:
+                          type: string
+                        spi:triStatusCL:
+                          type: string
+                        spi:triPathTX:
+                          type: string
+                        spi:triParentPropertyTX:
+                          type: 'null'
+                        rdf:about:
+                          type: string
+                        spi:triAddressTX:
+                          type: string
+                        dcterms:identifier:
+                          type: string
+                        spi:triActiveEndDA:
+                          type: 'null'
+                        spi:triJurisdictionCL:
+                          type: string
+                        spi:cstEnviziParentTwoTX:
+                          type: string
+                        spi:cstEnviziParentOneTX:
+                          type: string
+                        spi:triAreaUO:
+                          type: string
+                        spi:triDescriptionTX:
+                          type: string
+                        spi:triZipPostalTX:
+                          type: string
+                        spi:triModifiedSY:
+                          type: string
+                        spi:triLengthUO:
+                          type: string
+                  rdf:type:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rdf:resource:
+                          type: string
+                  rdf:about:
+                    type: string
+                title: Parsed JSON
+          - set-variable:
+              name: Set variable 5
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      totalPages:
+                        type: number
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                mappings:
+                  - variable:
+                      mappings:
+                        - totalPages:
+                            expression: >-
+                              $JSONParserParse2."oslc:responseInfo"."oslc:totalCount"?$ceil($JSONParserParse2."oslc:responseInfo"."oslc:totalCount"
+                              /$Setvariable.variable.query.pageSize ) :
+                              $count($JSONParserParse2."rdfs:member" )
+          - for-each:
+              name: For each
+              assembly:
+                $ref: '#/integration/assemblies/assembly-2'
+              source:
+                expression: '[1..$Setvariable5.variable.totalPages ]'
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: dBasketPOST
+                    $ref: '#/node-output/dBasket POST/response/payload'
+                  - variable: dBasketPOSTMetadata
+                    $ref: '#/node-output/dBasket POST/response'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+              mode: sequential
+              continue-on-error: false
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                mappings: []
+              display-name: Page
+          - if:
+              name: If 2
+              input:
+                - variable: Trigger
+                  $ref: '#/trigger/payload'
+                - variable: Setvariable
+                  $ref: '#/node-output/Set variable/response/payload'
+                - variable: If
+                  $ref: '#/node-output/If/response/payload'
+                - variable: Setvariable2
+                  $ref: '#/node-output/Set variable 2/response/payload'
+                - variable: Setvariable3
+                  $ref: '#/node-output/Set variable 3/response/payload'
+                - variable: Setvariable4
+                  $ref: '#/node-output/Set variable 4/response/payload'
+                - variable: HTTPInvokemethod
+                  $ref: '#/node-output/HTTP Invoke method/response/payload'
+                - variable: HTTPInvokemethodMetadata
+                  $ref: '#/node-output/HTTP Invoke method/response'
+                - variable: JSONParserParse2
+                  $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                - variable: Setvariable5
+                  $ref: '#/node-output/Set variable 5/response/payload'
+                - variable: Foreach
+                  $ref: '#/node-output/For each/response/payload'
+                - variable: flowDetails
+                  $ref: '#/flowDetails'
+              branch:
+                - condition:
+                    '{{$If.isOnDemand}}': 'true'
+                  execute: []
+                  completion-action:
+                    terminate:
+                      info:
+                        input:
+                          - variable: Trigger
+                            $ref: '#/trigger/payload'
+                          - variable: Setvariable
+                            $ref: '#/node-output/Set variable/response/payload'
+                          - variable: If
+                            $ref: '#/node-output/If/response/payload'
+                          - variable: Setvariable2
+                            $ref: '#/node-output/Set variable 2/response/payload'
+                          - variable: Setvariable3
+                            $ref: '#/node-output/Set variable 3/response/payload'
+                          - variable: Setvariable4
+                            $ref: '#/node-output/Set variable 4/response/payload'
+                          - variable: HTTPInvokemethod
+                            $ref: '#/node-output/HTTP Invoke method/response/payload'
+                          - variable: HTTPInvokemethodMetadata
+                            $ref: '#/node-output/HTTP Invoke method/response'
+                          - variable: JSONParserParse2
+                            $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                          - variable: Setvariable5
+                            $ref: '#/node-output/Set variable 5/response/payload'
+                          - variable: Foreach
+                            $ref: '#/node-output/For each/response/payload'
+                          - variable: flowDetails
+                            $ref: '#/flowDetails'
+                        message: Completed with override dates
+                        status-code: 200
+              else:
+                execute: []
+              output-schema: {}
+          - custom-action:
+              name: HTTP Invoke method 4
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-11'
+              action: INVOKE
+              map:
+                customSchemas:
+                  properties.`requestHeaders`:
+                    type: object
+                    properties:
+                      x-method-override:
+                        type: string
+                      PATCHTYPE:
+                        type: string
+                      Content-Type:
+                        type: string
+                mappings:
+                  - method:
+                      template: POST
+                  - requestBody:
+                      template: >-
+                        {"{{$Setvariable.variable.config.triAPICTimeStampQCField}}":"{{$fromMillis($toMillis($Trigger.currentEventTime))}}"}
+                  - requestHeaders:
+                      mappings:
+                        - Content-Type:
+                            template: application/json
+                        - PATCHTYPE:
+                            template: MERGE
+                        - x-method-override:
+                            template: PATCH
+                  - url:
+                      template: >-
+                        {{$Setvariable.variable.config.triURL}}/oslc/so/triAPICTimeStampRS/{{$If.timestampId}}
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: Foreach
+                    $ref: '#/node-output/For each/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+    assembly-2:
+      assembly:
+        execute:
+          - custom-action:
+              name: HTTP Invoke method 2
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-5'
+              action: INVOKE
+              map:
+                mappings:
+                  - continue2xx:
+                      expression: 'false'
+                  - method:
+                      template: GET
+                  - url:
+                      template: >-
+                        {{$Setvariable.variable.config.triURL}}/oslc/spq/{{$Setvariable.variable.query.from}}?{{$Setvariable4.variable.query}}&oslc.pageSize={{$Setvariable2.variable.pageSize}}&pageno={{$Foreachitem}}
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Foreachitem
+                    $ref: '#/block/For each/current-item'
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+          - parse:
+              name: JSON Parser Parse
+              parse-format: json
+              source:
+                template: '{{$HTTPInvokemethod2.responseBody}}'
+                input:
+                  - variable: Foreachitem
+                    $ref: '#/block/For each/current-item'
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: HTTPInvokemethod2
+                    $ref: >-
+                      #/block/For each/node-output/HTTP Invoke method
+                      2/response/payload
+                  - variable: HTTPInvokemethod2Metadata
+                    $ref: '#/block/For each/node-output/HTTP Invoke method 2/response'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+              sample-data: |-
+                {
+                  "prefixes": {
+                    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+                    "dcterms": "http://purl.org/dc/terms/",
+                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                    "spi": "http://jazz.net/ns/ism/smarter_physical_infrastructure#",
+                    "oslc": "http://open-services.net/ns/core#"
+                  },
+                  "oslc:responseInfo": {
+                    "oslc:nextPage": {
+                            "rdf:resource": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?oslc.select=*&oslc.pageSize=1&pageno=3"
+                    },
+                        "oslc:totalCount": 194,
+                        "rdf:about": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?pageno=1&oslc.select=*&oslc.pageSize=1"
+                  },
+                  "rdfs:member": [
+                    {
+                            "spi:triTotalAreaOccupiedCalcNU": 162.580319950303,
+                            "spi:groupName": "Latin America",
+                            "spi:triTenureCL": "Leased",
+                      "spi:triHeadcountNU": 0,
+                            "spi:triCountryTX": "Brazil",
+                            "spi:triGisLongitudeNU": -43.255234,
+                            "spi:triBuildingClassCL": "Office",
+                            "spi:cstEnviziGroupNamePathTX": "Latin America\\Brazil\\Rio de Janeiro",
+                      "spi:triAPICBuildingParent3LR": {
+                                "rdf:resource": "http://localhost/oslc/so/triAPICBuildingParent3RS/13038683"
+                          },
+                            "spi:triGisLatitudeNU": -22.8072,
+                            "spi:triActiveStartDA": "2010-11-12",
+                            "spi:triStateProvTX": "Rio de Janeir",
+                            "spi:cstEnviziParentThreeTX": "Rio de Janeiro",
+                            "spi:triNameTX": "Rio Complex",
+                            "spi:triLegalNameTX": "Rio Complex",
+                            "spi:triPrimaryUseCL": "Sales",
+                      "spi:triProRateBalanceToLI": "Balance To Measured",
+                            "spi:triCurrencyUO": "Brazilian real",
+                            "spi:triCityTX": "Rio de Janeiro",
+                            "spi:triIdTX": "LA002",
+                            "spi:triZoningCL": "Commercial",
+                            "spi:action": "http://localhost/oslc/system/action/triAPICOutboundBuildingRS/13042950",
+                      "spi:triStatusCL": "Active",
+                            "spi:triPathTX": "\\Locations\\Offices\\Latin America\\Rio Complex",
+                      "spi:triParentPropertyTX": null,
+                            "rdf:about": "http://localhost/oslc/so/triAPICOutboundBuildingRS/13042950",
+                            "spi:triAddressTX": "R. Theophilo Otoni, 52 - Centro",
+                            "dcterms:identifier": "13042950",
+                      "spi:triActiveEndDA": null,
+                            "spi:triJurisdictionCL": "Local/Other",
+                            "spi:cstEnviziParentTwoTX": "Brazil",
+                            "spi:cstEnviziParentOneTX": "Latin America",
+                            "spi:triAreaUO": "square-meters",
+                            "spi:triDescriptionTX": "Rio Complex",
+                            "spi:triZipPostalTX": "20090-070",
+                            "spi:triModifiedSY": "2022-09-09T07:06:45.350+00:00",
+                            "spi:triLengthUO": "meters"
+                    }
+                  ],
+                  "rdf:type": [
+                    {
+                      "rdf:resource": "http://www.w3.org/2000/01/rdf-schema#Container"
+                    }
+                  ],
+                  "rdf:about": "http://localhost/oslc/spq"
+                }
+              output-schema:
+                $schema: http://json-schema.org/draft-04/schema#
+                type: object
+                properties:
+                  prefixes:
+                    type: object
+                    properties:
+                      rdf:
+                        type: string
+                      dcterms:
+                        type: string
+                      rdfs:
+                        type: string
+                      spi:
+                        type: string
+                      oslc:
+                        type: string
+                  oslc:responseInfo:
+                    type: object
+                    properties:
+                      oslc:nextPage:
+                        type: object
+                        properties:
+                          rdf:resource:
+                            type: string
+                      oslc:totalCount:
+                        type: number
+                      rdf:about:
+                        type: string
+                  rdfs:member:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        spi:triTotalAreaOccupiedCalcNU:
+                          type: number
+                        spi:groupName:
+                          type: string
+                        spi:triTenureCL:
+                          type: string
+                        spi:triHeadcountNU:
+                          type: number
+                        spi:triCountryTX:
+                          type: string
+                        spi:triGisLongitudeNU:
+                          type: number
+                        spi:triBuildingClassCL:
+                          type: string
+                        spi:cstEnviziGroupNamePathTX:
+                          type: string
+                        spi:triAPICBuildingParent3LR:
+                          type: object
+                          properties:
+                            rdf:resource: null
+                            type: string
+                        spi:triGisLatitudeNU:
+                          type: number
+                        spi:triActiveStartDA:
+                          type: string
+                        spi:triStateProvTX:
+                          type: string
+                        spi:cstEnviziParentThreeTX:
+                          type: string
+                        spi:triNameTX:
+                          type: string
+                        spi:triLegalNameTX:
+                          type: string
+                        spi:triPrimaryUseCL:
+                          type: string
+                        spi:triProRateBalanceToLI:
+                          type: string
+                        spi:triCurrencyUO:
+                          type: string
+                        spi:triCityTX:
+                          type: string
+                        spi:triIdTX:
+                          type: string
+                        spi:triZoningCL:
+                          type: string
+                        spi:action:
+                          type: string
+                        spi:triStatusCL:
+                          type: string
+                        spi:triPathTX:
+                          type: string
+                        spi:triParentPropertyTX:
+                          type: 'null'
+                        rdf:about:
+                          type: string
+                        spi:triAddressTX:
+                          type: string
+                        dcterms:identifier:
+                          type: string
+                        spi:triActiveEndDA:
+                          type: 'null'
+                        spi:triJurisdictionCL:
+                          type: string
+                        spi:cstEnviziParentTwoTX:
+                          type: string
+                        spi:cstEnviziParentOneTX:
+                          type: string
+                        spi:triAreaUO:
+                          type: string
+                        spi:triDescriptionTX:
+                          type: string
+                        spi:triZipPostalTX:
+                          type: string
+                        spi:triModifiedSY:
+                          type: string
+                        spi:triLengthUO:
+                          type: string
+                  rdf:type:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rdf:resource:
+                          type: string
+                  rdf:about:
+                    type: string
+                title: Parsed JSON
+          - set-variable:
+              name: Set variable 6
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      buildingsCSV:
+                        type: string
+                input:
+                  - variable: Foreachitem
+                    $ref: '#/block/For each/current-item'
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: HTTPInvokemethod2
+                    $ref: >-
+                      #/block/For each/node-output/HTTP Invoke method
+                      2/response/payload
+                  - variable: HTTPInvokemethod2Metadata
+                    $ref: '#/block/For each/node-output/HTTP Invoke method 2/response'
+                  - variable: JSONParserParse
+                    $ref: >-
+                      #/block/For each/node-output/JSON Parser
+                      Parse/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - buildingsCSV:
+                            format:
+                              type: csv
+                              options:
+                                includeHeaders: true
+                                headerOrder:
+                                  - GROUPNAME1
+                                  - GROUPNAME2
+                                  - GROUPNAME3
+                                  - LOCATION
+                                  - LOCATIONID
+                                  - DESCRIPTION
+                                  - STREETADDRESS
+                                  - CITY
+                                  - STATEPROVINCE
+                                  - POSTALCODE
+                                  - COUNTRY
+                                  - LATITUDEY
+                                  - LONGITUDEX
+                                  - LOCATIONCLOSEDATE
+                                eol: LF
+                                alwaysQuotes: false
+                            foreach:
+                              input: '$JSONParserParse."rdfs:member" '
+                              iterator: buildingsCSVItem
+                              mappings:
+                                - CITY:
+                                    template: '{{$buildingsCSVItem."spi:triCityTX"}}'
+                                - COUNTRY:
+                                    template: '{{$buildingsCSVItem."spi:triCountryTX"}}'
+                                - DESCRIPTION:
+                                    template: >-
+                                      {{$buildingsCSVItem."spi:triDescriptionTX"}}
+                                - GROUPNAME1:
+                                    template: >-
+                                      {{$buildingsCSVItem."spi:cstEnviziParentOneTX"}}
+                                - GROUPNAME2:
+                                    template: >-
+                                      {{$buildingsCSVItem."spi:cstEnviziParentTwoTX"}}
+                                - GROUPNAME3:
+                                    template: >-
+                                      {{$buildingsCSVItem."spi:cstEnviziParentThreeTX"}}
+                                - LATITUDEY:
+                                    template: >-
+                                      {{$buildingsCSVItem."spi:triGisLatitudeNU"}}
+                                - LOCATION:
+                                    template: '{{$buildingsCSVItem."spi:triNameTX"}}'
+                                - LOCATIONCLOSEDATE:
+                                    template: '{{$buildingsCSVItem."spi:triActiveEndDA"}}'
+                                - LOCATIONID:
+                                    template: '{{$buildingsCSVItem."spi:triIdTX"}}'
+                                - LONGITUDEX:
+                                    template: >-
+                                      {{$buildingsCSVItem."spi:triGisLongitudeNU"}}
+                                - POSTALCODE:
+                                    template: '{{$buildingsCSVItem."spi:triZipPostalTX"}}'
+                                - STATEPROVINCE:
+                                    template: '{{$buildingsCSVItem."spi:triStateProvTX"}}'
+                                - STREETADDRESS:
+                                    template: '{{$buildingsCSVItem."spi:triAddressTX"}}'
+                stringFormatSchemas:
+                  properties.`variable`.properties.`buildingsCSV`:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            GROUPNAME1:
+                              type: string
+                            GROUPNAME2:
+                              type: string
+                            GROUPNAME3:
+                              type: string
+                            LOCATION:
+                              type: string
+                            LOCATIONID:
+                              type: string
+                            DESCRIPTION:
+                              type: string
+                            STREETADDRESS:
+                              type: string
+                            CITY:
+                              type: string
+                            STATEPROVINCE:
+                              type: string
+                            POSTALCODE:
+                              type: string
+                            COUNTRY:
+                              type: string
+                            LATITUDEY:
+                              type: string
+                            LONGITUDEX:
+                              type: string
+                            LOCATIONCLOSEDATE:
+                              type: string
+                        title: Items
+          - for-each:
+              name: For each 2
+              assembly:
+                $ref: '#/integration/assemblies/assembly-3'
+              source:
+                expression: >-
+                  $If.isOnDemand ? [$JSONParserParse."rdfs:member"] :
+                  [$JSONParserParse."rdfs:member"[$."spi:triStatusCL"="Active"]]
+                input:
+                  - variable: Foreachitem
+                    $ref: '#/block/For each/current-item'
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: HTTPInvokemethod2
+                    $ref: >-
+                      #/block/For each/node-output/HTTP Invoke method
+                      2/response/payload
+                  - variable: HTTPInvokemethod2Metadata
+                    $ref: '#/block/For each/node-output/HTTP Invoke method 2/response'
+                  - variable: JSONParserParse
+                    $ref: >-
+                      #/block/For each/node-output/JSON Parser
+                      Parse/response/payload
+                  - variable: Setvariable6
+                    $ref: >-
+                      #/block/For each/node-output/Set variable
+                      6/response/payload
+                  - variable: dBasketPOST2
+                    $ref: >-
+                      #/block/For each/node-output/dBasket POST
+                      2/response/payload
+                  - variable: dBasketPOST2Metadata
+                    $ref: '#/block/For each/node-output/dBasket POST 2/response'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: dBasketPOST
+                    $ref: '#/node-output/dBasket POST/response/payload'
+                  - variable: dBasketPOSTMetadata
+                    $ref: '#/node-output/dBasket POST/response'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+              mode: sequential
+              continue-on-error: false
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Foreach2item
+                    $ref: '#/block/For each 2/current-item'
+                  - variable: Foreachitem
+                    $ref: '#/block/For each/current-item'
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: Setvariable7
+                    $ref: >-
+                      #/block/For each 2/node-output/Set variable
+                      7/response/payload
+                  - variable: HTTPInvokemethod2
+                    $ref: >-
+                      #/block/For each/node-output/HTTP Invoke method
+                      2/response/payload
+                  - variable: HTTPInvokemethod2Metadata
+                    $ref: '#/block/For each/node-output/HTTP Invoke method 2/response'
+                  - variable: JSONParserParse
+                    $ref: >-
+                      #/block/For each/node-output/JSON Parser
+                      Parse/response/payload
+                  - variable: Setvariable6
+                    $ref: >-
+                      #/block/For each/node-output/Set variable
+                      6/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: HTTPInvokemethod3
+                    $ref: '#/node-output/HTTP Invoke method 3/response/payload'
+                  - variable: HTTPInvokemethod3Metadata
+                    $ref: '#/node-output/HTTP Invoke method 3/response'
+                  - variable: JSONParserParse3
+                    $ref: '#/node-output/JSON Parser Parse 3/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                customSchemas:
+                  properties.`output`:
+                    type: object
+                    properties:
+                      headCount:
+                        type: object
+                        properties: {}
+                      floorArea:
+                        type: object
+                        properties: {}
+                mappings:
+                  - output:
+                      mappings:
+                        - floorArea:
+                            expression: '$Setvariable7.variable.floorArea '
+                        - headCount:
+                            expression: '$Setvariable7.variable.headCount '
+              display-name: Building
+          - set-variable:
+              name: Set variable 8
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      accountsCSV:
+                        type: string
+                      buildingsFilename:
+                        type: string
+                      accountsFilename:
+                        type: string
+                input:
+                  - variable: Foreachitem
+                    $ref: '#/block/For each/current-item'
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: HTTPInvokemethod2
+                    $ref: >-
+                      #/block/For each/node-output/HTTP Invoke method
+                      2/response/payload
+                  - variable: HTTPInvokemethod2Metadata
+                    $ref: '#/block/For each/node-output/HTTP Invoke method 2/response'
+                  - variable: JSONParserParse
+                    $ref: >-
+                      #/block/For each/node-output/JSON Parser
+                      Parse/response/payload
+                  - variable: Setvariable6
+                    $ref: >-
+                      #/block/For each/node-output/Set variable
+                      6/response/payload
+                  - variable: Foreach2
+                    $ref: '#/block/For each/node-output/For each 2/response/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: HTTPInvokemethod3
+                    $ref: '#/node-output/HTTP Invoke method 3/response/payload'
+                  - variable: HTTPInvokemethod3Metadata
+                    $ref: '#/node-output/HTTP Invoke method 3/response'
+                  - variable: JSONParserParse3
+                    $ref: '#/node-output/JSON Parser Parse 3/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - accountsCSV:
+                            format:
+                              type: csv
+                              options:
+                                includeHeaders: true
+                                headerOrder:
+                                  - LOCATION
+                                  - LOCATIONID
+                                  - METERNAME
+                                  - READING
+                                  - MEASUREUNITID
+                                  - READINGDATE
+                                  - RECORDSTARTDATE
+                                  - RECORDENDDATE
+                                  - ACCOUNT
+                                  - DATATYPE
+                                eol: LF
+                                alwaysQuotes: false
+                            foreach:
+                              input: $Foreach2.output.*
+                              iterator: accountsCSVItem
+                              mappings:
+                                - ACCOUNT:
+                                    template: '{{$accountsCSVItem.account}}'
+                                - DATATYPE:
+                                    template: '{{$accountsCSVItem.dataType}}'
+                                - LOCATION:
+                                    template: '{{$accountsCSVItem.location}}'
+                                - LOCATIONID:
+                                    template: '{{$accountsCSVItem.locationID}}'
+                                - MEASUREUNITID:
+                                    template: '{{$accountsCSVItem.measureUnitID}}'
+                                - METERNAME:
+                                    template: '{{$accountsCSVItem.meterName}}'
+                                - READING:
+                                    template: '{{$accountsCSVItem.reading}}'
+                                - READINGDATE:
+                                    template: '{{$accountsCSVItem.readingDate}}'
+                        - accountsFilename:
+                            template: >-
+                              {{"TRI_"& $Setvariable.variable.config.customer &
+                              "_"
+                              &"Accounts_"&$Setvariable2.variable.batchTimestamp
+                              &"_"&$Foreachitem  }}.csv
+                        - buildingsFilename:
+                            template: >-
+                              {{"TRI_"& $Setvariable.variable.config.customer &
+                              "_"
+                              &"Buildings_"&$Setvariable2.variable.batchTimestamp
+                              &"_"&$Foreachitem  }}.csv
+                stringFormatSchemas:
+                  properties.`variable`.properties.`accountsCSV`:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            LOCATION:
+                              type: string
+                            LOCATIONID:
+                              type: string
+                            METERNAME:
+                              type: string
+                            READING:
+                              type: string
+                            MEASUREUNITID:
+                              type: string
+                            READINGDATE:
+                              type: string
+                            RECORDSTARTDATE:
+                              type: string
+                            RECORDENDDATE:
+                              type: string
+                            ACCOUNT:
+                              type: string
+                            DATATYPE:
+                              type: string
+                        title: Items
+          - create-action:
+              name: SFTP Create file
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-13'
+              map:
+                mappings:
+                  - data:
+                      template: '{{$Setvariable6.variable.buildingsCSV}}'
+                  - path:
+                      template: >-
+                        ./{{$Setvariable.variable.config.customer}}/generic/unprocessed/{{$Setvariable8.variable.buildingsFilename}}
+                  - type:
+                      template: Text
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Foreachitem
+                    $ref: '#/block/For each/current-item'
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: HTTPInvokemethod2
+                    $ref: >-
+                      #/block/For each/node-output/HTTP Invoke method
+                      2/response/payload
+                  - variable: HTTPInvokemethod2Metadata
+                    $ref: '#/block/For each/node-output/HTTP Invoke method 2/response'
+                  - variable: JSONParserParse
+                    $ref: >-
+                      #/block/For each/node-output/JSON Parser
+                      Parse/response/payload
+                  - variable: Setvariable6
+                    $ref: >-
+                      #/block/For each/node-output/Set variable
+                      6/response/payload
+                  - variable: Foreach2
+                    $ref: '#/block/For each/node-output/For each 2/response/payload'
+                  - variable: Setvariable8
+                    $ref: >-
+                      #/block/For each/node-output/Set variable
+                      8/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+          - create-action:
+              name: SFTP Create file 2
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-14'
+              map:
+                mappings:
+                  - data:
+                      template: '{{$Setvariable8.variable.accountsCSV}}'
+                  - path:
+                      template: >-
+                        ./{{$Setvariable.variable.config.customer}}/generic/unprocessed/{{$Setvariable8.variable.accountsFilename}}
+                  - type:
+                      template: Text
+                $map: http://ibm.com/appconnect/map/v1
+                input:
+                  - variable: Foreachitem
+                    $ref: '#/block/For each/current-item'
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: HTTPInvokemethod2
+                    $ref: >-
+                      #/block/For each/node-output/HTTP Invoke method
+                      2/response/payload
+                  - variable: HTTPInvokemethod2Metadata
+                    $ref: '#/block/For each/node-output/HTTP Invoke method 2/response'
+                  - variable: JSONParserParse
+                    $ref: >-
+                      #/block/For each/node-output/JSON Parser
+                      Parse/response/payload
+                  - variable: Setvariable6
+                    $ref: >-
+                      #/block/For each/node-output/Set variable
+                      6/response/payload
+                  - variable: Foreach2
+                    $ref: '#/block/For each/node-output/For each 2/response/payload'
+                  - variable: Setvariable8
+                    $ref: >-
+                      #/block/For each/node-output/Set variable
+                      8/response/payload
+                  - variable: SFTPCreatefile
+                    $ref: >-
+                      #/block/For each/node-output/SFTP Create
+                      file/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+    assembly-3:
+      assembly:
+        execute:
+          - set-variable:
+              name: Set variable 7
+              map:
+                $map: http://ibm.com/appconnect/map/v1
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      headCount:
+                        type: object
+                        properties: {}
+                      floorArea:
+                        type: object
+                        properties: {}
+                input:
+                  - variable: Foreach2item
+                    $ref: '#/block/For each 2/current-item'
+                  - variable: Foreachitem
+                    $ref: '#/block/For each/current-item'
+                  - variable: Trigger
+                    $ref: '#/trigger/payload'
+                  - variable: HTTPInvokemethod2
+                    $ref: >-
+                      #/block/For each/node-output/HTTP Invoke method
+                      2/response/payload
+                  - variable: HTTPInvokemethod2Metadata
+                    $ref: '#/block/For each/node-output/HTTP Invoke method 2/response'
+                  - variable: JSONParserParse
+                    $ref: >-
+                      #/block/For each/node-output/JSON Parser
+                      Parse/response/payload
+                  - variable: Setvariable6
+                    $ref: >-
+                      #/block/For each/node-output/Set variable
+                      6/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+                  - variable: Setvariable3
+                    $ref: '#/node-output/Set variable 3/response/payload'
+                  - variable: Setvariable4
+                    $ref: '#/node-output/Set variable 4/response/payload'
+                  - variable: HTTPInvokemethod
+                    $ref: '#/node-output/HTTP Invoke method/response/payload'
+                  - variable: HTTPInvokemethodMetadata
+                    $ref: '#/node-output/HTTP Invoke method/response'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable5
+                    $ref: '#/node-output/Set variable 5/response/payload'
+                  - variable: flowDetails
+                    $ref: '#/flowDetails'
+                mappings:
+                  - variable:
+                      mappings:
+                        - floorArea:
+                            expression: >-
+                              {    "location":$Foreach2item."spi:triNameTX",   
+                              "locationID":$Foreach2item."spi:triIdTX",   
+                              "meterName":"FLOORAREA",   
+                              "reading":$Foreach2item."spi:triTotalAreaOccupiedCalcNU",   
+                              "readingDate":$Foreach2item."spi:triModifiedSY",   
+                              "account":$Foreach2item."spi:triIdTX"&"_FLOORAREA",   
+                              "dataType":"FLOORAREA",   
+                              "measureUnitID":$Foreach2item."spi:triAreaUO"}
+                        - headCount:
+                            expression: "{    \"location\":$Foreach2item.\"spi:triNameTX\",        \t\"locationID\":$Foreach2item.\"spi:triIdTX\",        \t\"meterName\":\"HEADCOUNT\",\t\"reading\":$Foreach2item.\"spi:triHeadcountNU\",        \t\"readingDate\":$Foreach2item.\"spi:triModifiedSY\",        \t\"account\":$Foreach2item.\"spi:triIdTX\"&\"_HEADCOUNT\",        \t\"dataType\":\"HEADCOUNT\"}"
+  name: TririgaBuildings_Always_On_v1_0_1_Docs
+models: {}
