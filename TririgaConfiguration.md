@@ -21,10 +21,10 @@
 ## Overview
 This solution adds four fields that hold the group name values and the path for the integration. It also makes sure that the payload is sent when there is an update.
 
-### Security Role Configuration
+## Security Role Configuration
 In order to properly configure Tririga, a user needs to be configured with the proper security access for Object Migration and Tririga APIs
 
-#### Object Migration Access
+### Object Migration Access
 
 Object Migration is a task managed by administrators. If a Tririga User needs to have full access to Object Migration in Tririga, access is granted at the group level through the following steps:  
 
@@ -78,7 +78,7 @@ Please refer to the TRIRIGA Documentation on Security and Licenses by following 
   
 The user will now be able to interact with the proper Tririga Modules.
 
-#### Outbound Traffic from Tririga
+### Outbound Traffic from Tririga
 
 For outbound traffic from Tririga, grant at least READ access on the Business Objects that will be used. The table below shows the various supported business Objects the API can pull from: 
 
@@ -99,15 +99,15 @@ Task |[Work Task](https://github.com/IBM/tririga-api/blob/main/markdowns/WorkTas
 
 In the example below, the API user is able to pull data from the Building Business Object: 
 
-<img width="1097" alt="Outbound Business Object" src="https://media.github.ibm.com/user/348712/files/ebe9b700-3b48-11ed-9b3d-ca237f33f496">
+<img width="1097" alt="Outbound Business Object" src="https://media.github.ibm.com/user/348712/files/e5633b80-3b58-11ed-81a4-46540898ff50">
 
-#### Inbound traffic to Tririga
+### Inbound traffic to Tririga
 
 For inbound traffic, Data Access needs to be enabled as well as Application Access permissions to the triAPIConnect Module or the individual Objects. To enable an API user to create a building, grant access to the triAPICBuilding Business object as shown below: 
 
-<img width="1000" alt="Inbound Traffic Business Object" src="https://media.github.ibm.com/user/348712/files/ebe9b700-3b48-11ed-89b4-c5c0cff08d14">
+<img width="1000" alt="Inbound Traffic Business Object" src="https://media.github.ibm.com/user/348712/files/e5633b80-3b58-11ed-842e-cea368ad86dd">
 
-#### Minimum requirements
+### Minimum requirements
 
 For users to pull from these URLs, the minimum requirements are:
 
@@ -245,15 +245,15 @@ The triAPICTimestamp is a tririga record needed to set the baseline for when API
 
 To enable this functionality go to My Reports -> System Reports and search for Timestamp in the 'Name' section. Run the system report "triAPICTimestamp – Display – Manager Query" as shown below:
 
-<img width="700" alt="Time-Stamp-1" src="https://media.github.ibm.com/user/348712/files/6a495780-3b4f-11ed-8fe9-9d2fb3bd5f31">
-
+<img width="1792" alt="Time-Stamp-1" src="https://media.github.ibm.com/user/348712/files/e5fbd200-3b58-11ed-8cb3-21aef581d0d3">
+ 
 Click Add, and create a new record without details, as shown below, and close it
 
-<img width="700" alt="Time-Stamp-2" src="https://media.github.ibm.com/user/348712/files/6a495780-3b4f-11ed-940d-137135ba303d">
+<img width="800" alt="Time-Stamp-2" src="https://media.github.ibm.com/user/348712/files/6a495780-3b4f-11ed-940d-137135ba303d">
 
 The default date and time the record gets automatically applied to the record, and consequent opening of the record shows the default date and time as shown below:
 
-<img width="700" alt="Time-Stamp-3" src="https://media.github.ibm.com/user/348712/files/69b0c100-3b4f-11ed-95fc-1848213524cf">
+<img width="800" alt="Time-Stamp-3" src="https://media.github.ibm.com/user/348712/files/69b0c100-3b4f-11ed-95fc-1848213524cf">
 
 ### Using the Integration
 
@@ -267,7 +267,7 @@ Enable Envizi checkbox is available too. The envizi tab will be displayed only w
 
 One more item that must be configured is the Number of levels to be used on the envizi configuration. Envizihierarchy path will match this selection.
 
-<img width="414" alt="How-to-use" src="https://media.github.ibm.com/user/348712/files/21cd6380-3a95-11ed-800d-aa0c22556421">
+<img width="900" alt="How-to-use" src="https://media.github.ibm.com/user/348712/files/21cd6380-3a95-11ed-800d-aa0c22556421">
 
 Also, notice that there is a section named “Active/Retire with missing data”and “Draft/Revision with Missing Data”. This section will list the buildings that don’t have data defined for envizi group 3, so it means that no envizi group will be populated on those buildings.
 
@@ -276,6 +276,6 @@ You can filter to change only the desired records by changing query “cst -triB
 
 To use the tool, just select the desired envizi group names and click Save. On the moment Save is triggered, all buildings will be populated with the desired options. This process may take a few minutes depending on how many buildings you have on your system. After that envizi groups and path will be updated according to the selections made on Envizi Integration page.
 
-<img width="414" alt="How-to-use-2" src="https://media.github.ibm.com/user/348712/files/27c34480-3a95-11ed-9dc8-b6347de21bee">
+<img width="900" alt="How-to-use-2" src="https://media.github.ibm.com/user/348712/files/27c34480-3a95-11ed-9dc8-b6347de21bee">
 
 Also, every time a building is saved and there are changes on the defined fields, or a new building is created, the envizi groups and path will be modifiedaccording to the selected options. You can find the groups on tab Envizi on the building record
