@@ -17,6 +17,8 @@
     * [Workflow Builder](#workflow-builder)
     * [My Reports/OSLC](#my-reports-and-oslc)
   * [How to Use](#how-to-use)
+    * [TimeStamp Pre-Requisite](#time-stamp-pre-requisite)
+    * [Using the Integration](#using-the-integration) 
 
 ## Overview
 This solution adds four fields that hold the group name values and the path for the integration. It also makes sure that the payload is sent when there is an update.
@@ -26,17 +28,9 @@ In order to properly configure Tririga, a user needs to be configured with the p
 
 ### Object Migration Access
 
-Object Migration is a task managed by administrators. If a Tririga User needs to have full access to Object Migration in Tririga, access is granted at the group level through the following steps:  
+Object Migration is a task managed by administrators. If a Tririga User needs to have full access to Object Migration in Tririga, access is granted at the group level. Follow the steps given in Chapter 1 [here](https://www.ibm.com/docs/en/SSFCZ3_11.2/pdf/pdf_tri_app_admin.pdf) to create a new security group.
 
-Go to Tools -> Administration -> Security Manager.
-
-<img width="1076" alt="Security Manager" src="https://media.github.ibm.com/user/348712/files/ba5bd700-1a45-11ed-8b1a-3cf09869b74b">
-
-Click 'Add' to create a new security group or modify an existing group by clicking on the desired group. Fill in the information on the 'General' tab in the pop-up that opens.
-
-<img width="999" alt="Admin Group General Info" src="https://media.github.ibm.com/user/348712/files/ba5bd700-1a45-11ed-8b04-38ab22d7568b">
-
-Switch to the 'Access' tab and add the appropriate access to allow for importation of Object Migration Packages. There are 2 panes in 'Access': Object and Permissions. Scroll and find the Object Migration Object on the left pane and click 'Full Access' on the right pane.
+Select the newly created group or desired existing group and switch to the 'Access' tab and add the appropriate access for importation of Object Migration Packages. There are 2 panes in 'Access': Object and Permissions. Scroll and find the Object Migration Object on the left pane and click 'Full Access' on the right pane.
 
 <img width="1002" alt="Access Permissions" src="https://media.github.ibm.com/user/348712/files/baf46d80-1a45-11ed-924e-acda1e9bfe24">
 
