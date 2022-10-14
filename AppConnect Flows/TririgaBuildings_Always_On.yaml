@@ -138,7 +138,7 @@ integration:
                               - where:
                                   template: spi:triStatusCL in ["Active","Retired"]
                         - version:
-                            template: 1.0.1
+                            template: 1.1.0
           - if:
               name: If
               input:
@@ -1658,5 +1658,5 @@ integration:
                             expression: '{    "location":$Foreach2item."spi:triNameTX",    "locationID":$Foreach2item."spi:triIdTX",    "meterName":"FLOORAREA",    "reading":$Foreach2item."spi:triTotalAreaOccupiedCalcNU",    "readingDate":$Foreach2item."spi:triModifiedSY",    "account":$Foreach2item."spi:triIdTX"&"_FLOORAREA",    "dataType":"FLOORAREA",    "measureUnitID":$Foreach2item."spi:triAreaUO"}'
                         - headCount:
                             expression: '{    "location":$Foreach2item."spi:triNameTX",        	"locationID":$Foreach2item."spi:triIdTX",        	"meterName":"HEADCOUNT",	"reading":$Foreach2item."spi:triHeadcountNU",        	"readingDate":$Foreach2item."spi:triModifiedSY",        	"account":$Foreach2item."spi:triIdTX"&"_HEADCOUNT",        	"dataType":"HEADCOUNT"}'
-  name: TririgaBuildings_Always_On_v1_0_1
+  name: TririgaBuildings_Always_On_v1_1_0
 models: {}
