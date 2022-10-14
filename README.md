@@ -45,7 +45,7 @@ Note: The names in the screenshots are generic, the elements in this integration
 
 ### Adding Accounts
 
-Before importing the flow to AppConnect, add Accounts for SFTP and HTTP connectors. While adding the HTTP connector account, include credentials for the Tririga user which can consume the OSLC API.
+Before importing the flow to AppConnect, add Accounts for "Amazon S3" and "HTTP" connectors. While adding the HTTP connector account, include credentials for the Tririga user which can consume the OSLC API.
 
 - Navigate to Catalog section of the AppConnect instance
 <img width="960" alt="Create Account 1" src="https://media.github.ibm.com/user/375131/files/eb8b5a00-eb1d-11ec-8401-35b47d561ce4">
@@ -59,7 +59,7 @@ Before importing the flow to AppConnect, add Accounts for SFTP and HTTP connecto
 <img width="948" alt="Create Account 2b" src="https://media.github.ibm.com/user/375131/files/ecbc8700-eb1d-11ec-9693-4ce83ffda2e6">
 
 - Enter the necessary details for the connector
-    - For SFTP, it will be the SFTP server and user account.
+    - For Amazon S3, it will be the Secret Access Key and Access Key ID provided by Envizi.
     - For HTTP, it will be the Authentication Key or username and password needed for Tririga.
 <img width="960" alt="Create Account 3" src="https://media.github.ibm.com/user/375131/files/ed551d80-eb1d-11ec-9894-350e87fbb2b2">
 
@@ -145,6 +145,12 @@ This integration comes with two types of flows:
 - In Variable > config > customer, enter the value provided by Envizi
 - In Variable > config > triURL, enter URL for the Tririga instance
     - e.g., https://example.com:9080
+
+- Scroll to the Amazon S3 node and click on it to open the configuration
+![S3 Configuration](https://media.github.ibm.com/user/375131/files/56c06800-4bb4-11ed-9aa6-c6758d61300a)
+
+- From the bucket dropdown, select the bucket name provided by Envizi
+- Perform these actions on all Amazon S3 nodes in the flow
 
 
 ### Starting and Stopping the flow
