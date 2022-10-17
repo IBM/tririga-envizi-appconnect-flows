@@ -197,6 +197,8 @@ call to "triBuilding - Update Envizi fields with defined options" like displayed
 <img width="736" alt="WF call in Update Envizi Path" src="https://media.github.ibm.com/user/348712/files/374fdf80-09b7-11ed-8f47-3c588b667a58">
 
 It will be defined as the image below:
+ 
+<img width="1062" alt="Call Envizi" src="https://media.github.ibm.com/user/348712/files/478e2400-4e19-11ed-81eb-e5462bbcdff1">
 
 Click on the 'Start' task at the top and publish the workflow
 
