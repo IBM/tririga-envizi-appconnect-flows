@@ -207,6 +207,7 @@ Click on the 'Start' task at the top and publish the workflow
 Go to My Reports and navigate to 'System Reports'. Add those four new fields to the existing query
 "triAPICBuilding - OSLC -- Outbound" by clicking the 'Columns' tab and adding the four fields like below:
 
+<img width="800" alt="System-Report-Columns" src="https://media.github.ibm.com/user/348712/files/f0d51a00-4e19-11ed-9e28-a658b12af215">
 
 Save the report.
 
