@@ -26,8 +26,7 @@
   - [TririgaBuildings_Always_On](/AppConnect%20Flows/TririgaBuildings_Always_On.yaml)
   - [TririgaBuildings_On_Demand](/AppConnect%20Flows/TririgaBuildings_On_Demand.yaml)
 
-![Tririga-Envizi integration](https://media.github.ibm.com/user/375131/files/1a642100-01ed-11ed-8151-31e573db3664)
-
+![Tririga-Envizi integration](https://media.github.ibm.com/user/375131/files/cc529980-50c8-11ed-9c48-163b218b96be)
 
 ## Tririga Configuration
 
