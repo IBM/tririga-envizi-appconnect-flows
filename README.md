@@ -37,8 +37,6 @@ Follow the documentation [here](./TririgaConfiguration.md) for detailed instruct
 
 ## AppConnect Configuration
 
-Note: IBM Cloud AppConnect Professional or Enterprise is needed to run this flow.
-
 Note: The names in the screenshots are generic, the elements in this integration will not have the same names during setup.
 
 
