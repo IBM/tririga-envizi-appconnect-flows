@@ -42,20 +42,6 @@ integration:
       account-name: Tririga
       actions:
         INVOKE: {}
-    action-interface-13:
-      type: api-action
-      business-object: file
-      connector-type: sftp
-      account-name: Envizi
-      actions:
-        CREATE: {}
-    action-interface-14:
-      type: api-action
-      business-object: file
-      connector-type: sftp
-      account-name: Envizi
-      actions:
-        CREATE: {}
     action-interface-9:
       type: api-action
       business-object: request
@@ -63,6 +49,20 @@ integration:
       account-name: Tririga
       actions:
         INVOKE: {}
+    action-interface-1:
+      type: api-action
+      business-object: object
+      connector-type: amazons3
+      account-name: Envizi
+      actions:
+        CREATE: {}
+    action-interface-3:
+      type: api-action
+      business-object: object
+      connector-type: amazons3
+      account-name: Envizi
+      actions:
+        CREATE: {}
   assemblies:
     assembly-1:
       assembly:
@@ -130,7 +130,7 @@ integration:
                               - where:
                                   template: spi:triStatusCL in ["Active","Retired"]
                         - version:
-                            template: 1.0.1
+                            template: 1.1.1
           - if:
               name: If
               input:
@@ -1255,8 +1255,9 @@ integration:
               assembly:
                 $ref: "#/integration/assemblies/assembly-3"
               source:
-                expression: '$If.isOnDemand ? $JSONParserParse."rdfs:member" :
-                  $JSONParserParse."rdfs:member"[$."spi:triStatusCL"="Active"]'
+                expression: '($If.isOnDemand ? $JSONParserParse."rdfs:member"[] :
+                  ($activeBuildings:=$JSONParserParse."rdfs:member"[$."spi:triStatusCL"="Active"][];
+                  $activeBuildings ? $activeBuildings : [] ))'
                 input:
                   - variable: Foreachitem
                     $ref: "#/block/For each/current-item"
@@ -1484,17 +1485,20 @@ integration:
                               type: string
                         title: Items
           - create-action:
-              name: SFTP Create file
+              name: Amazon S3 Create object
               target:
-                $ref: "#/integration/action-interfaces/action-interface-13"
+                $ref: "#/integration/action-interfaces/action-interface-1"
               map:
                 mappings:
-                  - data:
+                  - ContentType:
+                      template: text/plain
+                  - Key:
+                      template: "{{$Setvariable.variable.config.customer}}/generic/unprocessed/{{$Set\
+                        variable8.variable.buildingsFilename}}"
+                  - bucketName:
+                      template: envizi-appconnect
+                  - content:
                       template: "{{$Setvariable6.variable.buildingsCSV}}"
-                  - path:
-                      template: ./{{$Setvariable.variable.config.customer}}/generic/unprocessed/{{$Setvariable8.variable.buildingsFilename}}
-                  - type:
-                      template: Text
                 $map: http://ibm.com/appconnect/map/v1
                 input:
                   - variable: Foreachitem
@@ -1534,17 +1538,20 @@ integration:
                   - variable: flowDetails
                     $ref: "#/flowDetails"
           - create-action:
-              name: SFTP Create file 2
+              name: Amazon S3 Create object 2
               target:
-                $ref: "#/integration/action-interfaces/action-interface-14"
+                $ref: "#/integration/action-interfaces/action-interface-3"
               map:
                 mappings:
-                  - data:
+                  - ContentType:
+                      template: text/plain
+                  - Key:
+                      template: "{{$Setvariable.variable.config.customer}}/generic/unprocessed/{{$Set\
+                        variable8.variable.accountsFilename}}"
+                  - bucketName:
+                      template: envizi-appconnect
+                  - content:
                       template: "{{$Setvariable8.variable.accountsCSV}}"
-                  - path:
-                      template: ./{{$Setvariable.variable.config.customer}}/generic/unprocessed/{{$Setvariable8.variable.accountsFilename}}
-                  - type:
-                      template: Text
                 $map: http://ibm.com/appconnect/map/v1
                 input:
                   - variable: Foreachitem
@@ -1563,8 +1570,8 @@ integration:
                     $ref: "#/block/For each/node-output/For each 2/response/payload"
                   - variable: Setvariable8
                     $ref: "#/block/For each/node-output/Set variable 8/response/payload"
-                  - variable: SFTPCreatefile
-                    $ref: "#/block/For each/node-output/SFTP Create file/response/payload"
+                  - variable: AmazonS3Createobject
+                    $ref: "#/block/For each/node-output/Amazon S3 Create object/response/payload"
                   - variable: Setvariable
                     $ref: "#/node-output/Set variable/response/payload"
                   - variable: If
@@ -1644,5 +1651,5 @@ integration:
                             expression: '{    "location":$Foreach2item."spi:triNameTX",    "locationID":$Foreach2item."spi:triIdTX",    "meterName":"FLOORAREA",    "reading":$Foreach2item."spi:triTotalAreaOccupiedCalcNU",    "readingDate":$Foreach2item."spi:triModifiedSY",    "account":$Foreach2item."spi:triIdTX"&"_FLOORAREA",    "dataType":"FLOORAREA",    "measureUnitID":$Foreach2item."spi:triAreaUO"}'
                         - headCount:
                             expression: '{    "location":$Foreach2item."spi:triNameTX",        	"locationID":$Foreach2item."spi:triIdTX",        	"meterName":"HEADCOUNT",	"reading":$Foreach2item."spi:triHeadcountNU",        	"readingDate":$Foreach2item."spi:triModifiedSY",        	"account":$Foreach2item."spi:triIdTX"&"_HEADCOUNT",        	"dataType":"HEADCOUNT"}'
-  name: TririgaBuildings_On_Demand_v1_0_1
+  name: TririgaBuildings_On_Demand_v1_1_1
 models: {}
