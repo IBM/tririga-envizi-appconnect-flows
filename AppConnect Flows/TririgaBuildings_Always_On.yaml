@@ -1263,8 +1263,9 @@ integration:
               assembly:
                 $ref: "#/integration/assemblies/assembly-3"
               source:
-                expression: '$If.isOnDemand ? $JSONParserParse."rdfs:member" :
-                  $JSONParserParse."rdfs:member"[$."spi:triStatusCL"="Active"]'
+                expression: '($If.isOnDemand ? $JSONParserParse."rdfs:member"[] :
+                  ($activeBuildings:=$JSONParserParse."rdfs:member"[$."spi:triStatusCL"="Active"][];
+                  $activeBuildings ? $activeBuildings : [] ))'
                 input:
                   - variable: Foreachitem
                     $ref: "#/block/For each/current-item"
