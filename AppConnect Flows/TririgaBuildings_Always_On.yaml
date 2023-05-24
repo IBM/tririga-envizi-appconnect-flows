@@ -937,33 +937,33 @@ integration:
                     $ref: "#/flowDetails"
               sample-data: >-
                 {
-                  "prefixes": {
-                    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-                    "dcterms": "http://purl.org/dc/terms/",
-                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    "spi": "http://jazz.net/ns/ism/smarter_physical_infrastructure#",
-                    "oslc": "http://open-services.net/ns/core#"
-                  },
-                  "oslc:responseInfo": {
-                    "oslc:nextPage": {
-                            "rdf:resource": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?oslc.select=*&oslc.pageSize=1&pageno=3"
+                    "prefixes": {
+                        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+                        "dcterms": "http://purl.org/dc/terms/",
+                        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                        "spi": "http://jazz.net/ns/ism/smarter_physical_infrastructure#",
+                        "oslc": "http://open-services.net/ns/core#"
                     },
+                    "oslc:responseInfo": {
+                        "oslc:nextPage": {
+                            "rdf:resource": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?oslc.select=*&oslc.pageSize=1&pageno=3"
+                        },
                         "oslc:totalCount": 194,
                         "rdf:about": "http://localhost/oslc/spq/triAPICOutboundBuildingQC?pageno=1&oslc.select=*&oslc.pageSize=1"
-                  },
-                  "rdfs:member": [
-                    {
+                    },
+                    "rdfs:member": [
+                        {
                             "spi:triTotalAreaOccupiedCalcNU": 162.580319950303,
                             "spi:groupName": "Latin America",
                             "spi:triTenureCL": "Leased",
-                      "spi:triHeadcountNU": 0,
+                            "spi:triHeadcountNU": 0,
                             "spi:triCountryTX": "Brazil",
                             "spi:triGisLongitudeNU": -43.255234,
                             "spi:triBuildingClassCL": "Office",
                             "spi:cstEnviziGroupNamePathTX": "Latin America\\Brazil\\Rio de Janeiro",
-                      "spi:triAPICBuildingParent3LR": {
+                            "spi:triAPICBuildingParent3LR": {
                                 "rdf:resource": "http://localhost/oslc/so/triAPICBuildingParent3RS/13038683"
-                          },
+                            },
                             "spi:triGisLatitudeNU": -22.8072,
                             "spi:triActiveStartDA": "2010-11-12",
                             "spi:triStateProvTX": "Rio de Janeir",
@@ -971,19 +971,19 @@ integration:
                             "spi:triNameTX": "Rio Complex",
                             "spi:triLegalNameTX": "Rio Complex",
                             "spi:triPrimaryUseCL": "Sales",
-                      "spi:triProRateBalanceToLI": "Balance To Measured",
+                            "spi:triProRateBalanceToLI": "Balance To Measured",
                             "spi:triCurrencyUO": "Brazilian real",
                             "spi:triCityTX": "Rio de Janeiro",
                             "spi:triIdTX": "LA002",
                             "spi:triZoningCL": "Commercial",
                             "spi:action": "http://localhost/oslc/system/action/triAPICOutboundBuildingRS/13042950",
-                      "spi:triStatusCL": "Active",
+                            "spi:triStatusCL": "Active",
                             "spi:triPathTX": "\\Locations\\Offices\\Latin America\\Rio Complex",
-                      "spi:triParentPropertyTX": null,
+                            "spi:triParentPropertyTX": null,
                             "rdf:about": "http://localhost/oslc/so/triAPICOutboundBuildingRS/13042950",
                             "spi:triAddressTX": "R. Theophilo Otoni, 52 - Centro",
                             "dcterms:identifier": "13042950",
-                      "spi:triActiveEndDA": null,
+                            "spi:triActiveEndDA": null,
                             "spi:triJurisdictionCL": "Local/Other",
                             "spi:cstEnviziParentTwoTX": "Brazil",
                             "spi:cstEnviziParentOneTX": "Latin America",
@@ -992,14 +992,14 @@ integration:
                             "spi:triZipPostalTX": "20090-070",
                             "spi:triModifiedSY": "2022-09-09T07:06:45.350+00:00",
                             "spi:triLengthUO": "meters"
-                    }
-                  ],
-                  "rdf:type": [
-                    {
-                      "rdf:resource": "http://www.w3.org/2000/01/rdf-schema#Container"
-                    }
-                  ],
-                  "rdf:about": "http://localhost/oslc/spq"
+                        }
+                    ],
+                    "rdf:type": [
+                        {
+                            "rdf:resource": "http://www.w3.org/2000/01/rdf-schema#Container"
+                        }
+                    ],
+                    "rdf:about": "http://localhost/oslc/spq"
                 }
               output-schema:
                 $schema: http://json-schema.org/draft-04/schema#
@@ -1054,7 +1054,7 @@ integration:
                         spi:triAPICBuildingParent3LR:
                           type: object
                           properties:
-                              rdf:resource:
+                            rdf:resource:
                               type: string
                         spi:triGisLatitudeNU:
                           type: number
