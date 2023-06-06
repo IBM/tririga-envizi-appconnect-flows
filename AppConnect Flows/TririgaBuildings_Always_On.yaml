@@ -1674,5 +1674,5 @@ integration:
                               $Foreach2item."spi:triRecordId",        	"meterName":"HEADCOUNT",	"reading":$Foreach2item."spi:triHeadcountNU",        	"readingDate":$Foreach2item."spi:triModifiedSY",        	"account":$Foreach2item."spi:triIdTX"
                               & "_" & $Foreach2item."spi:triRecordId" &
                               "_HEADCOUNT",        	"dataType":"HEADCOUNT"}'
-  name: TririgaBuildings_Always_On_v1_1_1
+  name: TririgaBuildings_Always_On_v1_2_0
 models: {}
