@@ -1506,8 +1506,8 @@ integration:
                   - ContentType:
                       template: text/plain
                   - Key:
-                      template: "{{$Setvariable.variable.config.customer}}/generic/unprocessed/{{$Set\
-                        variable8.variable.buildingsFilename}}"
+                      template: '{{$replace($Setvariable.variable.config.customer,"
+                        ","_")}}/generic/unprocessed/{{$Setvariable8.variable.buildingsFilename}}'
                   - bucketName:
                       template: envizi-appconnect
                   - content:
@@ -1559,8 +1559,8 @@ integration:
                   - ContentType:
                       template: text/plain
                   - Key:
-                      template: "{{$Setvariable.variable.config.customer}}/generic/unprocessed/{{$Set\
-                        variable8.variable.accountsFilename}}"
+                      template: '{{$replace($Setvariable.variable.config.customer,"
+                        ","_")}}/generic/unprocessed/{{$Setvariable8.variable.accountsFilename}}'
                   - bucketName:
                       template: envizi-appconnect
                   - content:
