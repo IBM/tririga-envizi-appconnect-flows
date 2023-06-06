@@ -982,6 +982,7 @@ integration:
                             "spi:triAreaUO": "square-meters",
                             "spi:triDescriptionTX": "Rio Complex",
                             "spi:triZipPostalTX": "20090-070",
+                          	"spi:triRecordId": "1234",
                             "spi:triModifiedSY": "2022-09-09T07:06:45.350+00:00",
                             "spi:triLengthUO": "meters"
                         }
@@ -1100,6 +1101,8 @@ integration:
                           type: string
                         spi:triZipPostalTX:
                           type: string
+                        spi:triRecordId:
+                          type: string
                         spi:triModifiedSY:
                           type: string
                         spi:triLengthUO:
@@ -1199,11 +1202,13 @@ integration:
                                 - LATITUDEY:
                                     template: '{{$buildingsCSVItem."spi:triGisLatitudeNU"}}'
                                 - LOCATION:
-                                    template: '{{$buildingsCSVItem."spi:triNameTX"}}'
+                                    template: '{{$buildingsCSVItem."spi:triNameTX" & "_" &
+                                      $buildingsCSVItem."spi:triRecordId"}}'
                                 - LOCATIONCLOSEDATE:
                                     template: '{{$buildingsCSVItem."spi:triActiveEndDA"}}'
                                 - LOCATIONID:
-                                    template: '{{$buildingsCSVItem."spi:triIdTX"}}'
+                                    template: '{{$buildingsCSVItem."spi:triIdTX" & "_" &
+                                      $buildingsCSVItem."spi:triRecordId"}}'
                                 - LONGITUDEX:
                                     template: '{{$buildingsCSVItem."spi:triGisLongitudeNU"}}'
                                 - POSTALCODE:
@@ -1648,8 +1653,18 @@ integration:
                   - variable:
                       mappings:
                         - floorArea:
-                            expression: '{    "location":$Foreach2item."spi:triNameTX",    "locationID":$Foreach2item."spi:triIdTX",    "meterName":"FLOORAREA",    "reading":$Foreach2item."spi:triTotalAreaOccupiedCalcNU",    "readingDate":$Foreach2item."spi:triModifiedSY",    "account":$Foreach2item."spi:triIdTX"&"_FLOORAREA",    "dataType":"FLOORAREA",    "measureUnitID":$Foreach2item."spi:triAreaUO"}'
+                            expression: '{    "location":$Foreach2item."spi:triNameTX" & "_" &
+                              $Foreach2item."spi:triRecordId",    "locationID":$Foreach2item."spi:triIdTX"
+                              & "_" &
+                              $Foreach2item."spi:triRecordId",    "meterName":"FLOORAREA",    "reading":$Foreach2item."spi:triTotalAreaOccupiedCalcNU",    "readingDate":$Foreach2item."spi:triModifiedSY",    "account":$Foreach2item."spi:triIdTX"
+                              & "_" & $Foreach2item."spi:triRecordId" &
+                              "_FLOORAREA",    "dataType":"FLOORAREA",    "measureUnitID":$Foreach2item."spi:triAreaUO"}'
                         - headCount:
-                            expression: '{    "location":$Foreach2item."spi:triNameTX",        	"locationID":$Foreach2item."spi:triIdTX",        	"meterName":"HEADCOUNT",	"reading":$Foreach2item."spi:triHeadcountNU",        	"readingDate":$Foreach2item."spi:triModifiedSY",        	"account":$Foreach2item."spi:triIdTX"&"_HEADCOUNT",        	"dataType":"HEADCOUNT"}'
+                            expression: '{    "location":$Foreach2item."spi:triNameTX" & "_" &
+                              $Foreach2item."spi:triRecordId",        	"locationID":
+                              $Foreach2item."spi:triIdTX" & "_" &
+                              $Foreach2item."spi:triRecordId",        	"meterName":"HEADCOUNT",	"reading":$Foreach2item."spi:triHeadcountNU",        	"readingDate":$Foreach2item."spi:triModifiedSY",        	"account":$Foreach2item."spi:triIdTX"
+                              & "_" & $Foreach2item."spi:triRecordId" &
+                              "_HEADCOUNT",        	"dataType":"HEADCOUNT"}'
   name: TririgaBuildings_On_Demand_v1_1_1
 models: {}
