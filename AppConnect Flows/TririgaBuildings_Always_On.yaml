@@ -138,7 +138,7 @@ integration:
                               - where:
                                   template: spi:triStatusCL in ["Active","Retired"]
                         - version:
-                            template: 1.1.1
+                            template: 1.2.0
           - if:
               name: If
               input:
